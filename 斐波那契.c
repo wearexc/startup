@@ -1,19 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-void main()
-{
-	int a=1,b=0,c=0,x,i;
-	scanf("%d",&x);
-	for(i=0;i<100;i++)
-	{
-	c=a+b;
-	if (c>x) break;
-	printf(" %d",c);
-	a=b+c;
-	if (a>x) break;
-	printf(" %d",a);
-	b=a+c;
-	if (b>x) break;
-    printf(" %d",b);
-	}
+#include<stdio.h>
+int getNum(int n){	
+	if (n == 1 || n==2 )
+		return 1;
+	return getNum(n - 2) + getNum(n - 1);
+
+}
+ 
+int main(){
+	printf("f(12)=%d",getNum(12));
+	return 0;
 }
