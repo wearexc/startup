@@ -1,0 +1,68 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: Ë³Ðò±í - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\Users\90872\AppData\Local\Temp\RSPE4C8.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Fp"Debug/Ë³Ðò±í.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c"
+]
+Creating command line "cl.exe @C:\Users\90872\AppData\Local\Temp\RSPE4C8.tmp" 
+<h3>Output Window</h3>
+Compiling...
+Ë³Ðò±í.c
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(10) : error C2143: syntax error : missing ')' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(10) : error C2143: syntax error : missing '{' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(10) : error C2059: syntax error : '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(10) : error C2059: syntax error : ')'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(17) : error C2143: syntax error : missing ')' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(17) : error C2143: syntax error : missing '{' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(17) : error C2059: syntax error : '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(17) : error C2059: syntax error : ')'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(40) : error C2143: syntax error : missing ')' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(40) : error C2143: syntax error : missing '{' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(40) : error C2059: syntax error : '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(40) : error C2059: syntax error : ')'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(51) : error C2143: syntax error : missing ')' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(51) : error C2143: syntax error : missing '{' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(51) : error C2059: syntax error : '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(51) : error C2059: syntax error : ')'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(60) : error C2143: syntax error : missing ')' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(60) : error C2143: syntax error : missing '{' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(60) : error C2059: syntax error : '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(60) : error C2059: syntax error : ')'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(66) : error C2143: syntax error : missing ')' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(66) : error C2143: syntax error : missing '{' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(66) : error C2059: syntax error : '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(66) : error C2059: syntax error : ')'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(74) : error C2143: syntax error : missing ')' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(74) : error C2143: syntax error : missing '{' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(74) : error C2059: syntax error : '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(74) : error C2059: syntax error : ')'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(82) : error C2143: syntax error : missing ')' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(82) : error C2143: syntax error : missing '{' before '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(82) : error C2059: syntax error : '&'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(82) : error C2059: syntax error : ')'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(98) : warning C4013: 'initlink' undefined; assuming extern returning int
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(103) : warning C4013: 'input' undefined; assuming extern returning int
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(105) : warning C4013: 'output' undefined; assuming extern returning int
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(107) : error C2275: 'link' : illegal use of this type as an expression
+        C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(8) : see declaration of 'link'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(107) : error C2146: syntax error : missing ';' before identifier 'y'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(107) : error C2065: 'y' : undeclared identifier
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(108) : error C2143: syntax error : missing ';' before 'type'
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(109) : error C2065: 'b' : undeclared identifier
+C:\Users\90872\Documents\GitHub\startup\Ë³Ðò±í.c(117) : warning C4013: 'hebing' undefined; assuming extern returning int
+Ö´ÐÐ cl.exe Ê±³ö´í.
+
+
+
+<h3>Results</h3>
+Ë³Ðò±í.obj - 1 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
