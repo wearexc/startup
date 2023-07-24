@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
 #include <time.h>
 #include <string.h>
 
@@ -17,15 +16,13 @@ char MobiType[50][10];	    //手机序列号
 
 void AddStaff()  //录入员工 
 {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE); //Windows颜色 
 	AddStaff:
 	printf("现在开始录入员工编号，输入完毕后请按回车键。\n");
+	fflush(stdin);   //缓存区清除函数 
 	scanf("%d",&data.Staff[data.ThingNum]);
 	if(data.Staff[data.ThingNum]/10000000==0||data.Staff[data.ThingNum]/10000000>10||data.Staff[data.ThingNum]<0)  //判断输入编号格式 
 	{
-		SetConsoleTextAttribute(hConsole, 0xC );  //变红输出警告 
-		printf("请按照正确格式输入，该次输入无效。\n");
-		SetConsoleTextAttribute(hConsole, 0x7 );  //输出后又变白
+		printf("	*请按照正确格式输入，该次输入无效。*\n");
 		goto AddStaff;
 	}
 	else
@@ -51,10 +48,10 @@ void GetTime()   //添加系统时间
 
 void error()
 {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE); //Windows颜色 
-	SetConsoleTextAttribute(hConsole, 0xC);  //变红输出警告 
-	printf("数据错误，请重新输入\n");
-	SetConsoleTextAttribute(hConsole, 0x7 );  //输出后又变白
+	printf("\n"); 
+	printf("	*数据错误，请重新输入!*\n");
+	printf("\n"); 
+
 }
 
 void AddTime()  //录入时间 
@@ -62,21 +59,25 @@ void AddTime()  //录入时间
 	int a,i,b,c;
 	again:
 	printf("您可以选择手动添加时间或者自动添加本地时间，自动添加输入1，逐个添加输入其它任意数\n");
+	fflush(stdin);   //缓存区清除函数 
 	scanf("%d",&a);
 	if(a==1) {GetTime();}
 	else
 	{
 		Year: 
 		printf("请输入年：\n");
+		fflush(stdin);   //缓存区清除函数 
 		scanf("%d",&data.Time[data.ThingNum*6+0]);
 		if(data.Time[data.ThingNum*6+0]<=0) {error();  goto Year;}
 		if(data.Time[data.ThingNum*6+0]%4==0&&data.Time[data.ThingNum*6+0]%100||data.Time[data.ThingNum*6+0]%400==0) b=1; else{b=0;}
 		Moon:
 		printf("请输入月：\n");
+		fflush(stdin);   //缓存区清除函数 
 		scanf("%d",&data.Time[data.ThingNum*6+1]);
 		if(data.Time[data.ThingNum*6+1]<=0||data.Time[data.ThingNum*6+1]>12) {error();  goto Moon;}
 		Day:
 		printf("请输入日：\n");
+		fflush(stdin);   //缓存区清除函数 
 		scanf("%d",&data.Time[data.ThingNum*6+2]);
 		if(data.Time[data.ThingNum*6+2]<=0||data.Time[data.ThingNum*6+2]>31) {error();  goto Moon;}
 			else 
@@ -90,19 +91,23 @@ void AddTime()  //录入时间
 			}
 		hour:
 		printf("请输入时：\n");	
+		fflush(stdin);   //缓存区清除函数 
 		scanf("%d",&data.Time[data.ThingNum*6+3]);
 		if(data.Time[data.ThingNum*6+3]<0||data.Time[data.ThingNum*6+3]>23) {error();  goto hour;}
 		min:
 		printf("请输入分：\n");	
+		fflush(stdin);   //缓存区清除函数 
 		scanf("%d",&data.Time[data.ThingNum*6+4]);
 		if(data.Time[data.ThingNum*6+4]<0||data.Time[data.ThingNum*6+4]>60) {error();  goto min;}
 		sec:
 		printf("请输入秒：\n");	
+		fflush(stdin);   //缓存区清除函数 
 		scanf("%d",&data.Time[data.ThingNum*6+5]);
 		if(data.Time[data.ThingNum*6+5]<0||data.Time[data.ThingNum*6+5]>60) {error();  goto sec;}
 	}
 	printf("您录入的时间为： %d年%02d月%02d日 %02d:%02d:%02d\n",data.Time[data.ThingNum*6+0],data.Time[data.ThingNum*6+1],data.Time[data.ThingNum*6+2],data.Time[data.ThingNum*6+3],data.Time[data.ThingNum*6+4],data.Time[data.ThingNum*6+5]);
 	printf("请确认录入时间，确认请输入“1”，重新则输入“0”\n");
+	fflush(stdin);   //缓存区清除函数 
 	scanf("%d",&c);
 	if(c==0) {goto again;}
 		else
@@ -143,6 +148,7 @@ void AddMobiRef() //添加手机编号
 	int a;
 	AddMobiRef: 
 	printf("请输入手机编号：\n");
+	fflush(stdin);   //缓存区清除函数 
 	scanf("%d",&data.MobiRef[data.ThingNum]);
 	a=data.MobiRef[data.ThingNum]/10000;
 	if(a>0&&a<10)
@@ -160,7 +166,8 @@ void AddMobiRef() //添加手机编号
 void ThingState()  //记录事件状态，借或还。
 {
 	ThingState:
-	printf("借手机请输入0，还手机请输入1。输出后请按回车\n");
+	printf("借手机请输入0或任意字符，还手机请输入1。输出后请按回车\n");
+	fflush(stdin);   //缓存区清除函数 
 	scanf("%d",&data.thing[data.ThingNum]);
 	if(data.thing[data.ThingNum]!=0&&data.thing[data.ThingNum]!=1)
 	{

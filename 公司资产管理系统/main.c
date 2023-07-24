@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "SYSTEM.h"
-#include <windows.h>
 
 extern struct { 
 		int ThingNum;			//记录事件个数 
@@ -34,6 +33,7 @@ int main()
 		"输入完成请按回车键             \n"
 		"*******************************\n"
 		);
+		fflush(stdin);   //缓存区清除函数 
 		scanf("%d",&a);
 		switch(a)
 		{
