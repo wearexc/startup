@@ -34,3 +34,4 @@
 .\objects\main.o: .\Hardware\W25Q64.h
 .\objects\main.o: .\System\User.h
 .\objects\main.o: .\Hardware\Motor.h
+.\objects\main.o: .\System\Timer.h

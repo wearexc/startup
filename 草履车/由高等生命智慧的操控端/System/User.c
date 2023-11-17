@@ -11,7 +11,7 @@
 
 uint8_t direction[2];
 
-uint8_t demo,Data,Num,abc,Time,Time_Flag,History_Time;
+uint8_t demo,Data,Num,abc,Time,Time_Flag,History_Time,CountDown;
 uint16_t i;
 uint8_t TxData[2],RxData[4],Check[1] = {0xee};
 
@@ -26,6 +26,7 @@ void Mode_0()           //初始化
 	Rocker_Init();
 	Key_Init();
 	NRF24L01_Tx_Mode();
+	CountDown = 5;
 }
 
 void Mode_1()           //实时操控
@@ -77,6 +78,7 @@ void TIM2_IRQHandler(void)
 			{
 				Time++;
 				Time_Flag = 0;
+				CountDown -- ;
 			}
 			if(TxData[1] == TimeLimit*5) TxData[1] = 0;     //配置上限时间
 		}

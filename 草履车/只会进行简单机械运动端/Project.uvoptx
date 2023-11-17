@@ -156,7 +156,7 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Mode,0x0A</ItemText>
+          <ItemText>Data[1]</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
@@ -166,22 +166,22 @@
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>temp</ItemText>
+          <ItemText>abc,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Mode_Flag</ItemText>
+          <ItemText>Num</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RxData1[1]</ItemText>
+          <ItemText>RxData0</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RxData1[2]</ItemText>
+          <ItemText>RxData1</ItemText>
         </Ww>
         <Ww>
           <count>7</count>

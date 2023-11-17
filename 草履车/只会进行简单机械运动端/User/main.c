@@ -5,6 +5,7 @@
 #include "W25Q64.h"
 #include "User.h"
 #include "Motor.h"
+#include "Timer.h"
 
 //uint8_t mode,Speed,Time,Time_Flag,Data[4];
 //uint8_t RxData1[256],RxData2[256];
@@ -16,8 +17,9 @@ int main(void)
 //	Motor_SetLiftSpeed(40);
 	while (1)
 	{
-		Status(Data[0]);
-		Mode_1();
+		Mode_2();
+//		Status(Data[0]);
+//		Mode_2();
 	}
 }
 

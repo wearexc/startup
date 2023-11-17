@@ -90,7 +90,7 @@ void EXTI0_IRQHandler(void)   //最右侧按键，用于启动回溯
 
 	if (EXTI_GetITStatus(EXTI_Line0) == SET)
 	{
-		
+		TxData[1] = 0;
 		if(BackTrack_Flag == 1)
 		{
 			BackTrack_Flag = 0;

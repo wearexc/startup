@@ -3,7 +3,7 @@
 
 extern uint8_t direction[2];
 
-extern uint8_t demo,Data,Num,abc,Time,Time_Flag,History_Time;
+extern uint8_t demo,Data,Num,abc,Time,Time_Flag,History_Time,CountDown;
 extern uint16_t i;
 extern uint8_t TxData[2],RxData[4];
 

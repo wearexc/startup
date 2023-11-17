@@ -29,3 +29,4 @@
 .\objects\rocker.o: .\Library\stm32f10x_wwdg.h
 .\objects\rocker.o: .\Library\misc.h
 .\objects\rocker.o: Hardware\Key.h
+.\objects\rocker.o: .\System\User.h

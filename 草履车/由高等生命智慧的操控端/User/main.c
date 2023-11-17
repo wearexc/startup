@@ -18,6 +18,7 @@ int main(void)
 		OLED_ShowNum(2,5,Speed,3);
 		OLED_ShowNum(3,1,Mode,3);
 		OLED_ShowNum(3,5,BackTrack,3);
+		OLED_ShowNum(3,9,CountDown,3);
 		OLED_ShowNum(4,1,TxData[1],3);
 		OLED_ShowNum(4,5,Time,3);
 		OLED_ShowHexNum(4,9,History_Time,3);
