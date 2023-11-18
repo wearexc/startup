@@ -33,3 +33,4 @@
 .\objects\user.o: .\Hardware\nRF24L01.h
 .\objects\user.o: .\Hardware\Motor.h
 .\objects\user.o: .\Hardware\W25Q64.h
+.\objects\user.o: System\Store.h

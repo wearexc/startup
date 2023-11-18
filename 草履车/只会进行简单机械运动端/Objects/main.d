@@ -35,3 +35,5 @@
 .\objects\main.o: .\System\User.h
 .\objects\main.o: .\Hardware\Motor.h
 .\objects\main.o: .\System\Timer.h
+.\objects\main.o: .\Hardware\HC_SR04.h
+.\objects\main.o: .\System\Store.h

@@ -6,20 +6,33 @@
 #include "User.h"
 #include "Motor.h"
 #include "Timer.h"
+#include "HC_SR04.h"
+#include "Store.h"
 
 //uint8_t mode,Speed,Time,Time_Flag,Data[4];
 //uint8_t RxData1[256],RxData2[256];
+float Distance;
 
-int main(void)
+int main(void)          //防丢操作可以丢到主函数。Mode1的防丢因为BUG失效
 {
+	Mode_Init();
 
-	Mode_0();
-//	Motor_SetLiftSpeed(40);
+//	HC_SR04_Init();
+//	HC_SR04_GPIO_Init();
+//	HC_SR_04_TIME_NVIC_Init();
 	while (1)
 	{
-		Mode_2();
-//		Status(Data[0]);
-//		Mode_2();
+//		Distance = Get_Length();
+		NRF24L01_RxPacket(Data);
+//		Mode_8();
+		if((Data[0] & 0x1c) == 0x00) Mode_1();     			//实时控制
+//		else if((Data[0] & 0x1c) == 0x04) Mode_2();			//观察模式
+//		else if((Data[0] & 0x1c) == 0x08) Mode_3();			//跟随模式
+//		else if((Data[0] & 0x1c) == 0x0c) Mode_4();			//避障模式
+//		else if((Data[0] & 0x1c) == 0x10) Mode_5();			//睡眠模式
+		else if((Data[0] & 0x1c) == 0x14) Mode_6();			//回溯模式（启动）
+		else if((Data[0] & 0x1c) == 0x18) Mode_7();			//回溯模式（记录）
+		else if((Data[0] & 0x1c) == 0x1c) Mode_8();			//启动记录的操作
 	}
 }
 

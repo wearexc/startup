@@ -274,7 +274,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x8000000</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0xfc00</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -680,6 +680,26 @@
               <FileType>5</FileType>
               <FilePath>.\System\Timer.h</FilePath>
             </File>
+            <File>
+              <FileName>MyFLASH.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\MyFLASH.c</FilePath>
+            </File>
+            <File>
+              <FileName>MyFLASH.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\MyFLASH.h</FilePath>
+            </File>
+            <File>
+              <FileName>Store.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\Store.c</FilePath>
+            </File>
+            <File>
+              <FileName>Store.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\Store.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -759,6 +779,16 @@
               <FileName>W25Q64_Ins.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware\W25Q64_Ins.h</FilePath>
+            </File>
+            <File>
+              <FileName>HC_SR04.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\HC_SR04.c</FilePath>
+            </File>
+            <File>
+              <FileName>HC_SR04.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\HC_SR04.h</FilePath>
             </File>
           </Files>
         </Group>

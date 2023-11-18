@@ -76,16 +76,17 @@ void EXTI1_IRQHandler(void)    //最左侧按键，用于控制状态
 	if (EXTI_GetITStatus(EXTI_Line1) == SET)
 	{
 		Mode_Flag = 1;
-		if(Mode == 4) Mode = -1;
+		if(Mode == 6) Mode = -1;
 		Mode ++;
 		Delay_ms(20);
 		while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == 0);
 		Delay_ms(20);
+		TxData[1] = 0x00;
 		EXTI_ClearITPendingBit(EXTI_Line1);
 	}
 }
 
-void EXTI0_IRQHandler(void)   //最右侧按键，用于启动回溯
+void EXTI0_IRQHandler(void)   //最右侧按键，用于启动记录
 {
 
 	if (EXTI_GetITStatus(EXTI_Line0) == SET)
@@ -110,7 +111,7 @@ void EXTI3_IRQHandler(void)  //中间按键，用于记录操作
 	{
 		if(BackTime_Flag == 1) 
 		{
-			BackTime_Flag = 2;
+			BackTime_Flag = 0;
 			History_Time = Time;
 			Time = 0;
 			TxData[1] = 0xff;
