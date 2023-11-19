@@ -231,7 +231,22 @@
         <Ww>
           <count>16</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Store_Data[1]</ItemText>
+          <ItemText>Store_Data[Temp+1] </ItemText>
+        </Ww>
+        <Ww>
+          <count>17</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>(uint8_t)aaaaa</ItemText>
+        </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>((uint8_t)Store_Data[BackTrack_Count] &amp; 0x03)</ItemText>
+        </Ww>
+        <Ww>
+          <count>19</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>aaaaa + (((uint8_t)Store_Data[BackTrack_Count] &amp; 0x03 ))</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>

@@ -9,7 +9,7 @@
 #define  Mode_1_WarnBit 50  //警告位，当一段时间没有收到控制信号，将自动急停。
 
 uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode_1_Cheak,Mode_1_Data,Mode,BackTrack_Flag,Record_Flag;
-uint16_t WarnBit,BackTrack_Num,BackTrack_Count,aaaaa,Temp;
+uint16_t WarnBit,BackTrack_Num,Store_Count,BackTrack_Count,aaaaa,Temp;
 uint8_t RxData0[1020+16];
 
 
@@ -137,7 +137,7 @@ void Mode_8()            //记录操作
 void Mode_6()   //启动记录
 {
 	BackTrack_Count = (Store_Data[1] >> 8);
-	Temp = 0;
+	Store_Count = 1;
 	Timer_Init();
 	while(1)
 	{
@@ -171,16 +171,16 @@ void TIM2_IRQHandler(void)             //没资源啊没资源，只能共用定
 			Temp ++;
 			if(Temp%2 == 1)
 			{
-				aaaaa = ~((uint8_t)Store_Data[BackTrack_Count] & 0xe0);
+				aaaaa = ~(((uint8_t)Store_Data[BackTrack_Count] >> 8) & 0xe0);
 				aaaaa &= 0xe0;
-				aaaaa += ((uint8_t)Store_Data[BackTrack_Count] & 0x03);
+				aaaaa += (((uint8_t)Store_Data[BackTrack_Count] >> 8) & 0x03);
 				Motor_State((uint8_t)aaaaa);				
 			}
 			else
 			{
 				aaaaa = ~((uint8_t)Store_Data[BackTrack_Count] & 0xe0);
 				aaaaa &= 0xe0;
-				aaaaa += ((uint8_t)Store_Data[BackTrack_Count] & 0x03);
+				aaaaa += ((uint8_t)Store_Data[BackTrack_Count] & 0x03);   //怀疑是运算符优先级问题，重点排查
 				Motor_State((uint8_t)aaaaa);;
 				BackTrack_Count --;
 			}
@@ -196,13 +196,14 @@ void TIM2_IRQHandler(void)             //没资源啊没资源，只能共用定
 			Temp++;
 			if(Temp%2 == 1)
 			{
-				aaaaa = (Store_Data[Temp+2]);
+				aaaaa = ((uint8_t)Store_Data[Store_Count+1]);
 				Motor_State((uint8_t)aaaaa);
 			}
 			else
 			{
-				aaaaa = ((Store_Data[Temp+2] >> 8));
+				aaaaa = (Store_Data[Store_Count+1]>> 8);
 				Motor_State((uint8_t)aaaaa);
+				Store_Count++;
 			}
 			if(Temp == (uint8_t)Store_Data[1])
 			{
