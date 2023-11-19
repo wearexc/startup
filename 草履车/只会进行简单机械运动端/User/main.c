@@ -35,7 +35,7 @@ int main(void)          //防丢操作可以丢到主函数。Mode1的防丢因�
 //		else if((Data[0] & 0x1c) == 0x0c) Mode_4();			//避障模式
 //		else if((Data[0] & 0x1c) == 0x10) Mode_5();			//睡眠模式
 		else if((Data[0] & 0x1c) == 0x14) Mode_6();			//启动记录
-//		else if((Data[0] & 0x1c) == 0x18) Mode_7();			//启动回溯
+		else if((Data[0] & 0x1c) == 0x18) Mode_7();			//启动回溯
 		else if((Data[0] & 0x1c) == 0x1c) Mode_8();			//记录操作
 	}
 }

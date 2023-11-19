@@ -72,24 +72,31 @@ void Mode_1()            //实时遥控模式
 	}
 }
 
-//void Mode_7()          //回溯模式，开始回溯
-//{
-//	Timer_Init();
-//	BackTrack_Count = Store_Data[2];
-//	while(1)
+void Mode_7()          //回溯模式，开始回溯
+{
+	Timer_Init();
+//	if(Store_Data[1] % 2 == 1)
 //	{
-//		if(BackTrack_Flag == 1)
-//		{
-//			BackTrack_Flag = 0;
-//			TIM_Cmd(TIM2,DISABLE);
-//			goto Mode_6_Break;
-//		}
+//		BackTrack_Count = ((Store_Data[1]/2) + 1);
 //	}
-//	Mode_6_Break:
-//	Buzz_Mode(3);         
-//	Buzz_Mode(3);         //执行完毕,提醒用户切换模式，嗡鸣结束后回溯操作将再进行一次。
-//	
-//}	
+//	else
+//	{
+		BackTrack_Count = (Store_Data[1]/2)+1;	
+//}
+	while(1)
+	{
+		if(BackTrack_Flag == 1)
+		{
+			BackTrack_Flag = 0;
+			TIM_Cmd(TIM2,DISABLE);
+			goto Mode_6_Break;
+		}
+	}
+	Mode_6_Break:
+	Buzz_Mode(3);         
+	Buzz_Mode(3);         //执行完毕,提醒用户切换模式，嗡鸣结束后回溯操作将再进行一次。
+	
+}	
 
 void Mode_8()            //记录操作
 {
@@ -159,26 +166,31 @@ void TIM2_IRQHandler(void)             //没资源啊没资源，只能共用定
 	uint16_t State;
 	if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
 	{
-//		if((Data[0] & 0x1c) == 0x18)     //用于执行回溯
-//		{
-//			Temp ++;
-//			if(Temp%2 == 1)
-//			{
-//				aaaaa = (Store_Data[BackTrack_Count]);
-//				Motor_State((uint8_t)aaaaa);
-//			}
-//			else
-//			{
-//				aaaaa = ((Store_Data[Temp+2] >> 8));
-//				Motor_State((uint8_t)aaaaa);
-//			}
-//			if(Temp == (uint8_t)Store_Data[2])
-//			{
-//				Motor_State(0);
-//				Record_Flag = 1;
-//				Buzz_Mode(2);    
-//			}
-//		}
+		if((Data[0] & 0x1c) == 0x18)     //用于执行回溯
+		{
+			Temp ++;
+			if(Temp%2 == 1)
+			{
+				aaaaa = ~((uint8_t)Store_Data[BackTrack_Count] & 0xe0);
+				aaaaa &= 0xe0;
+				aaaaa += ((uint8_t)Store_Data[BackTrack_Count] & 0x03);
+				Motor_State((uint8_t)aaaaa);				
+			}
+			else
+			{
+				aaaaa = ~((uint8_t)Store_Data[BackTrack_Count] & 0xe0);
+				aaaaa &= 0xe0;
+				aaaaa += ((uint8_t)Store_Data[BackTrack_Count] & 0x03);
+				Motor_State((uint8_t)aaaaa);;
+				BackTrack_Count --;
+			}
+			if(BackTrack_Count == 2)
+			{
+				Motor_State(0);
+				BackTrack_Flag = 1;
+				Buzz_Mode(2);    
+			}
+		}
 		if((Data[0] & 0x1c) == 0x14)     //用于执行已记录的操作  
 		{
 			Temp++;
@@ -192,7 +204,7 @@ void TIM2_IRQHandler(void)             //没资源啊没资源，只能共用定
 				aaaaa = ((Store_Data[Temp+2] >> 8));
 				Motor_State((uint8_t)aaaaa);
 			}
-			if(Temp == (uint8_t)Store_Data[2])
+			if(Temp == (uint8_t)Store_Data[1])
 			{
 				Motor_State(0);
 				Record_Flag = 1;
@@ -206,6 +218,21 @@ void TIM2_IRQHandler(void)             //没资源啊没资源，只能共用定
 	}
 }
 
+
+
+//	if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
+//	{
+//		Data = ~(RxData1[Num] & 0xef);
+//		Data += (RxData1[Num] & 0x04);
+//		Motor_State(Data);
+//		Num--;
+//		if(Num == 0)
+//		{
+//			Motor_State(0);
+//			BackTrack_Flag = 1;
+//		}
+//		
+		
 /*
 uint8_t Mode_2()            //观察模式
 {
