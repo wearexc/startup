@@ -8,8 +8,8 @@
 
 #define  Mode_1_WarnBit 50  //警告位，当一段时间没有收到控制信号，将自动急停。
 
-uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode_1_Cheak,Mode_1_Data,Mode,temp,BackTrack_Flag,Record_Flag;
-uint16_t WarnBit,BackTrack_Num,BackTrack_Count;
+uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode_1_Cheak,Mode_1_Data,Mode,Temp,BackTrack_Flag,Record_Flag;
+uint16_t WarnBit,BackTrack_Num,BackTrack_Count,aaaaa;
 uint8_t RxData0[256+16],RxData1[256];
 
 
@@ -111,6 +111,7 @@ void Mode_7()            //回溯模式，开始计时
 			if(Mode_7_Count>256+16 | Data[1] == 0xff) 
 			{
 				RxData0[15] = (Mode_7_Count-16);  //-16是直接在程序上修正，按理说不需要。对，按理。  
+				RxData0[16] = (Mode_7_Count-16);  //闪存16位，存储两次8位的数据，仅为了方便数据管理（偷懒）。
 				MyDMA_Init((uint32_t)RxData0+15,(uint32_t)RxData1);
 				MyDMA_Transfer();	
 				MyDMA_Init((uint32_t)RxData0+15,(uint32_t)Store_Data+2);
@@ -131,7 +132,8 @@ void Mode_7()            //回溯模式，开始计时
 
 void Mode_8()   //执行记录
 {
-	BackTrack_Count = Store_Data[2];
+	BackTrack_Count = (Store_Data[1] >> 8);
+	Temp = 0;
 	Timer_Init();
 	while(1)
 	{
@@ -157,7 +159,7 @@ void Mode_8()   //执行记录
 
 void TIM2_IRQHandler(void)             //没资源啊没资源，只能共用定时器中断了，希望不会出啥茬子。
 {
-	uint8_t State,State2;
+	uint16_t State;
 	if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
 	{
 		if((Data[0] & 0x1c) == 0x14)     //用于执行回溯
@@ -173,19 +175,26 @@ void TIM2_IRQHandler(void)             //没资源啊没资源，只能共用定
 				Buzz_Mode(2);    
 			}
 		}
-		//		if((Data[0] & 0x1c) == 0x1c)     //用于执行已记录的操作  //改处理FLASH数据，它是顺序执行的。如果舍弃睡眠模式，说不定能再加个按钮，一个操控回溯，一个操控历史操作。
-//		{
-//			State = (Store_Data[BackTrack_Count+2] & 0xef);
-//			State += (Store_Data[BackTrack_Count+2] & 0x04);
-//			Motor_State(State);
-//			BackTrack_Count+2;
-//			if(BackTrack_Count == 0)
-//			{
-//				Motor_State(0);
-//				Record_Flag = 1;
-//				Buzz_Mode(2);    
-//			}
-//		}
+		if((Data[0] & 0x1c) == 0x1c)     //用于执行已记录的操作  
+		{
+			Temp++;
+			if(Temp%2 == 1)
+			{
+				aaaaa = (Store_Data[Temp+2]);
+				Motor_State((uint8_t)aaaaa);
+			}
+			else
+			{
+				aaaaa = ((Store_Data[Temp+2] >> 8));
+				Motor_State((uint8_t)aaaaa);
+			}
+			if(Temp == (uint8_t)Store_Data[2])
+			{
+				Motor_State(0);
+				Record_Flag = 1;
+				Buzz_Mode(2);    
+			}
+		}
 		
 		
 		
