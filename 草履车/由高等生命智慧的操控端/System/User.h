@@ -11,5 +11,5 @@ extern uint8_t TxData[2],RxData[4];
 void Mode_0();
 void Mode_1();
 void Mode_2();
-
+void Mode_8();
 #endif

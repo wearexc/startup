@@ -2,7 +2,7 @@
 #define __USER_H
 
 extern uint8_t mode,Speed,Time,Time_Flag,Data[4];
-extern uint8_t RxData1[256],RxData2[256];
+extern uint8_t RxData0[1020+16];
 
 
 void Status(uint8_t Data);  //处理小车状态

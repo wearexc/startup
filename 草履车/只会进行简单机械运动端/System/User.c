@@ -8,9 +8,9 @@
 
 #define  Mode_1_WarnBit 50  //警告位，当一段时间没有收到控制信号，将自动急停。
 
-uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode_1_Cheak,Mode_1_Data,Mode,Temp,BackTrack_Flag,Record_Flag;
-uint16_t WarnBit,BackTrack_Num,BackTrack_Count,aaaaa;
-uint8_t RxData0[256+16],RxData1[256];
+uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode_1_Cheak,Mode_1_Data,Mode,BackTrack_Flag,Record_Flag;
+uint16_t WarnBit,BackTrack_Num,BackTrack_Count,aaaaa,Temp;
+uint8_t RxData0[1020+16];
 
 
 void Status(uint8_t Data)  //处理小车状态
@@ -31,7 +31,7 @@ void SignWarn()     //信号警告，失去控制时紧急制动。
 
 
 
-void Mode_Init()             //上电模式，用于自检
+void Mode_Init()             //上电模式，用于初始化
 {
 	Motor_Init();
 	W25Q64_Init();
@@ -72,26 +72,26 @@ void Mode_1()            //实时遥控模式
 	}
 }
 
-void Mode_6()          //回溯模式，开始回溯
-{
-	Timer_Init();
-	BackTrack_Count = RxData1[0];
-	while(1)
-	{
-		if(BackTrack_Flag == 1)
-		{
-			BackTrack_Flag = 0;
-			TIM_Cmd(TIM2,DISABLE);
-			goto Mode_6_Break;
-		}
-	}
-	Mode_6_Break:
-	Buzz_Mode(3);         
-	Buzz_Mode(3);         //执行完毕,提醒用户切换模式，嗡鸣结束后回溯操作将再进行一次。
-	
-}	
+//void Mode_7()          //回溯模式，开始回溯
+//{
+//	Timer_Init();
+//	BackTrack_Count = Store_Data[2];
+//	while(1)
+//	{
+//		if(BackTrack_Flag == 1)
+//		{
+//			BackTrack_Flag = 0;
+//			TIM_Cmd(TIM2,DISABLE);
+//			goto Mode_6_Break;
+//		}
+//	}
+//	Mode_6_Break:
+//	Buzz_Mode(3);         
+//	Buzz_Mode(3);         //执行完毕,提醒用户切换模式，嗡鸣结束后回溯操作将再进行一次。
+//	
+//}	
 
-void Mode_7()            //回溯模式，开始计时
+void Mode_8()            //记录操作
 {
 //	Timer_Init();
 //	Buzz_Mode(1);
@@ -108,19 +108,16 @@ void Mode_7()            //回溯模式，开始计时
 					Buzz_Mode(2);    //计时开始
 				}
 			Mode_7_Count++;
-			if(Mode_7_Count>256+16 | Data[1] == 0xff) 
+			if(Mode_7_Count>1020+16 | Data[1] == 0xff) 
 			{
-				RxData0[15] = (Mode_7_Count-16);  //-16是直接在程序上修正，按理说不需要。对，按理。  
-				RxData0[16] = (Mode_7_Count-16);  //闪存16位，存储两次8位的数据，仅为了方便数据管理（偷懒）。
-				MyDMA_Init((uint32_t)RxData0+15,(uint32_t)RxData1);
-				MyDMA_Transfer();	
 				MyDMA_Init((uint32_t)RxData0+15,(uint32_t)Store_Data+2);
 				MyDMA_Transfer();	
+				Store_Data[1] = Mode_7_Count-16;  //-16是直接在程序上修正，按理说不需要。对，按理。  
 				Store_Save();				
 				goto Mode_7_Break;                                     
 			}
 		}
-		if(Mode_7_Count>=14)
+		if(Mode_7_Count>=15)
 		{
 
 			Motor_State(Data[0]);			
@@ -130,7 +127,7 @@ void Mode_7()            //回溯模式，开始计时
 	Buzz_Mode(2);         //计时结束
 }
 
-void Mode_8()   //执行记录
+void Mode_6()   //启动记录
 {
 	BackTrack_Count = (Store_Data[1] >> 8);
 	Temp = 0;
@@ -162,20 +159,27 @@ void TIM2_IRQHandler(void)             //没资源啊没资源，只能共用定
 	uint16_t State;
 	if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
 	{
-		if((Data[0] & 0x1c) == 0x14)     //用于执行回溯
-		{
-			State = ~(RxData1[BackTrack_Count] & 0xef);
-			State += (RxData1[BackTrack_Count] & 0x04);
-			Motor_State(State);
-			BackTrack_Count--;
-			if(BackTrack_Count == 0)
-			{
-				Motor_State(0);
-				BackTrack_Flag = 1;
-				Buzz_Mode(2);    
-			}
-		}
-		if((Data[0] & 0x1c) == 0x1c)     //用于执行已记录的操作  
+//		if((Data[0] & 0x1c) == 0x18)     //用于执行回溯
+//		{
+//			Temp ++;
+//			if(Temp%2 == 1)
+//			{
+//				aaaaa = (Store_Data[BackTrack_Count]);
+//				Motor_State((uint8_t)aaaaa);
+//			}
+//			else
+//			{
+//				aaaaa = ((Store_Data[Temp+2] >> 8));
+//				Motor_State((uint8_t)aaaaa);
+//			}
+//			if(Temp == (uint8_t)Store_Data[2])
+//			{
+//				Motor_State(0);
+//				Record_Flag = 1;
+//				Buzz_Mode(2);    
+//			}
+//		}
+		if((Data[0] & 0x1c) == 0x14)     //用于执行已记录的操作  
 		{
 			Temp++;
 			if(Temp%2 == 1)

@@ -82,15 +82,19 @@ uint8_t Rocker_Data()   //摇杆按键数据处理，注释为xy轴方向。
 	else if(Speed == 100) (temp += 3);
 	
 	
-	if(BackTrack_Flag == 1)  //启动记录
+	if(Record_Flag == 1)  //启动记录
 	{
-		temp += 28;
+		temp += 20;
 		TxData[1] = 0;
-//		BackTrack = 0;
 	}
-	else if(BackTime_Flag == 1)    //开始回溯计时
+	else if(BackTrack_Flag== 1)  //启动回溯
 	{
 		temp += 24;
+		TxData[1] = 0;
+	}
+	else if(BackTime_Flag == 1)    //开始记录
+	{
+		temp += 28;
 	}
 	else 
 	{

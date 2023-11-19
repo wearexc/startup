@@ -2,7 +2,7 @@
 #include "MyFLASH.h"
 
 #define STORE_START_ADDRESS		0x0800FC00   //闪存首地址
-#define STORE_COUNT				256          //数据大小
+#define STORE_COUNT				512          //数据大小
 
 uint16_t Store_Data[STORE_COUNT];
 

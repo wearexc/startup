@@ -7,13 +7,14 @@
 #include "nRF24L01.h"
 #include "Timer.h"
 
-#define TimeLimit   50                      //发送时间数据的上限为50秒,参数范围 0~50
+#define TimeLimit   180                      //记录操作的时间上限为x秒,参数范围 0~204秒
 
 uint8_t direction[2];
 
-uint8_t demo,Data,Num,abc,Time,Time_Flag,History_Time,CountDown;
+uint8_t demo,Data,Num,abc,Time,Time_Flag,History_Time;
 uint16_t i;
 uint8_t TxData[2],RxData[4],Check[1] = {0xee};
+
 
 
 //所有驱动进行初始化
@@ -26,7 +27,6 @@ void Mode_0()           //初始化
 	Rocker_Init();
 	Key_Init();
 	NRF24L01_Tx_Mode();
-	CountDown = 5;
 }
 
 void Mode_1()           //实时操控
@@ -35,7 +35,7 @@ void Mode_1()           //实时操控
 	NRF24L01_TxPacket(TxData);
 }
 
-void Mode_2()           //回溯模式
+void Mode_8()           //记录操作
 {
 	Timer_Init();
 //	TxData[0] = Rocker_Data();
@@ -72,15 +72,18 @@ void TIM2_IRQHandler(void)
 
 		if(BackTime_Flag == 1)
 		{
-			TxData[1]++;
+//			TxData[1]++;   //TxData[1]数据无关紧要了，如果保留则可以在接收端接收TxData[1]，查看数据丢包情况。
 			Time_Flag++;
 			if(Time_Flag == 5) 
 			{
 				Time++;
 				Time_Flag = 0;
-				CountDown -- ;
 			}
-			if(TxData[1] == TimeLimit*5) TxData[1] = 0;     //配置上限时间
+			if(Time == TimeLimit) 
+			{
+				TxData[1] = 0xff; //配置上限时间，达到则置标志位。（也可以用TxData[0]规定特殊数据，则可完全舍弃TxData[1]）
+				Time_Flag = 1;    //计时结束
+			}    
 		}
 
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);

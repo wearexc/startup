@@ -30,11 +30,13 @@ Build target 'Target 1'
 compiling User.c...
 System\Timer.h(8): warning:  #1295-D: Deprecated declaration Buzz_Init - give arg types
   void Buzz_Init();
-System\User.c: 1 warning, 0 errors
+System\User.c(159): warning:  #177-D: variable "State"  was declared but never referenced
+  	uint16_t State;
+System\User.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=5444 RO-data=332 RW-data=24 ZI-data=2672  
+Program Size: Code=5244 RO-data=332 RW-data=24 ZI-data=3696  
 FromELF: creating hex file...
-".\Objects\Project.axf" - 0 Error(s), 1 Warning(s).
+".\Objects\Project.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -48,7 +50,7 @@ Package Vendor: Keil
   D:\keil\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>
