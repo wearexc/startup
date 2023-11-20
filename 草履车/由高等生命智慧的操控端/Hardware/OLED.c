@@ -5,6 +5,8 @@
 #define OLED_W_SCL(x)		GPIO_WriteBit(GPIOB, GPIO_Pin_8, (BitAction)(x))
 #define OLED_W_SDA(x)		GPIO_WriteBit(GPIOB, GPIO_Pin_9, (BitAction)(x))
 
+uint8_t OLED_Temp;
+
 /*引脚初始化*/
 void OLED_I2C_Init(void)
 {
@@ -319,3 +321,41 @@ void OLED_Init(void)
 		
 	OLED_Clear();				//OLED清屏
 }
+
+
+
+/***********功能描述：显示显示BMP图片128×64起始点坐标(x,y),x的范围0～127，y为页的范围0～7*****************/
+void OLED_DrawBMP(unsigned char x0, unsigned char y0,unsigned char x1, unsigned char y1,unsigned char PI[])
+{ 	
+ unsigned int j=0;
+ unsigned char x,y;
+  
+ // if(y1%8==0) y=y1/8;      
+ // else y=y1/8+1;
+	for(y=y0;y<y1;y++)
+	{
+		OLED_SetCursor(y,x0);  //第一个设置y,第二个设置x//设置光标位置左上角(0,0) 往下0-7 ， 往右0-127
+    for(x=x0;x<x1;x++)
+	    {      
+	    	OLED_WriteData(PI[j++]);	    	//写数据
+	    }
+	}
+} 
+
+
+void OLED_BMP(uint8_t Rocker)
+{	
+	if(Rocker != OLED_Temp)
+	{
+		OLED_Clear();
+	}
+	if((Rocker & 0xe0) == 0x20)   OLED_DrawBMP(0,0,25,5,PI[1]);
+	else if((Rocker & 0xe0) == 0xc0)   OLED_DrawBMP(0,0,25,5,PI[2]);
+	else if((Rocker & 0xe0) == 0x40)   OLED_DrawBMP(0,0,28,5,PI[3]);
+	else if((Rocker & 0xe0) == 0xa0)   OLED_DrawBMP(0,0,28,5,PI[4]);
+	else if((Rocker & 0xe0) == 0x60)   OLED_DrawBMP(0,0,28,5,PI[5]);
+	else if((Rocker & 0xe0) == 0x80)   OLED_DrawBMP(0,0,28,5,PI[6]);
+		else  OLED_DrawBMP(0,0,28,3,PI[7]);
+	OLED_Temp = Rocker;
+}
+

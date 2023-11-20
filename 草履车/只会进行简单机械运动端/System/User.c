@@ -5,12 +5,16 @@
 #include "Motor.h"
 #include "W25Q64.h"
 #include "Store.h"
+#include "HC_SR04.h"
 
-#define  Mode_1_WarnBit 50  //警告位，当一段时间没有收到控制信号，将自动急停。
+#define  Mode_1_WarnBit 50  //警告位，当一段时间没有收到控制信号，将自动急停。（应该是踩内存，无所谓了）
+							//如果我删除这个define，只定义了一个WarnBit不赋值，那么因为收到信号踩内存被自动赋值
+							//没收到信号则自动--直到为0，然后发出警告。应该是可行的，别人还会摸不着头脑
+							//这段程序到处植入，如果哪天有人维护把那BUG修了，嘿嘿。。。
 
 uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode_1_Cheak,Mode_1_Data,Mode,BackTrack_Flag,Record_Flag;
 uint16_t WarnBit,BackTrack_Num,Store_Count,BackTrack_Count,aaaaa,Temp;
-uint8_t RxData0[1020+16];
+uint8_t RxData[1020+16];
 
 
 void Status(uint8_t Data)  //处理小车状态
@@ -72,67 +76,13 @@ void Mode_1()            //实时遥控模式
 	}
 }
 
-void Mode_7()          //回溯模式，开始回溯
+void Mode_3()  //跟随模式
 {
-	Timer_Init();
-//	if(Store_Data[1] % 2 == 1)
-//	{
-//		BackTrack_Count = ((Store_Data[1]/2) + 1);
-//	}
-//	else
-//	{
-		BackTrack_Count = (Store_Data[1]/2)+1;	
-//}
-	while(1)
-	{
-		if(BackTrack_Flag == 1)
-		{
-			BackTrack_Flag = 0;
-			TIM_Cmd(TIM2,DISABLE);
-			goto Mode_6_Break;
-		}
-	}
-	Mode_6_Break:
-	Buzz_Mode(3);         
-	Buzz_Mode(3);         //执行完毕,提醒用户切换模式，嗡鸣结束后回溯操作将再进行一次。
 	
-}	
-
-void Mode_8()            //记录操作
-{
-//	Timer_Init();
-//	Buzz_Mode(1);
-	uint16_t Mode_7_Count = 0;
-//	Store_Clear();
-	while(1)
-	{
-		NRF24L01_RxPacket(Data);
-		if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_10) == 0)  //获取蓝牙中断，按理说不该在里面执行大量程序，这会加重丢包（管他呢）
-		{
-			RxData0[Mode_7_Count] = Data[0];
-			if(Mode_7_Count == 16)
-				{
-					Buzz_Mode(2);    //计时开始
-				}
-			Mode_7_Count++;
-			if(Mode_7_Count>1020+16 | Data[1] == 0xff) 
-			{
-				MyDMA_Init((uint32_t)RxData0+15,(uint32_t)Store_Data+2);
-				MyDMA_Transfer();	
-				Store_Data[1] = Mode_7_Count-16;  //-16是直接在程序上修正，按理说不需要。对，按理。  
-				Store_Save();				
-				goto Mode_7_Break;                                     
-			}
-		}
-		if(Mode_7_Count>=15)
-		{
-
-			Motor_State(Data[0]);			
-		}
-	}
-	Mode_7_Break:
-	Buzz_Mode(2);         //计时结束
+	
 }
+	
+
 
 void Mode_6()   //启动记录
 {
@@ -153,6 +103,60 @@ void Mode_6()   //启动记录
 	Buzz_Mode(3);         //执行完毕,提醒用户切换模式，嗡鸣结束后操作将再进行一次。	
 }
 
+void Mode_7()          //回溯模式，开始回溯
+{
+	Timer_Init();
+	BackTrack_Count = (Store_Data[1]/2)+1;	//实验才是检测代码的唯一标准，执行对了就行。
+	while(1)
+	{
+		if(BackTrack_Flag == 1)
+		{
+			BackTrack_Flag = 0;
+			TIM_Cmd(TIM2,DISABLE);
+			goto Mode_6_Break;
+		}
+	}
+	Mode_6_Break:
+	Buzz_Mode(3);         
+	Buzz_Mode(3);         //执行完毕,提醒用户切换模式，嗡鸣结束后回溯操作将再进行一次。
+	
+}	
+
+void Mode_8()            //记录操作
+{
+	uint16_t Mode_7_Count = 0;
+	while(1)
+	{
+		NRF24L01_RxPacket(Data);
+		if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_10) == 0)  //获取蓝牙中断，按理说不该在里面执行大量程序，这会加重丢包（管他呢）
+		{
+			RxData[Mode_7_Count] = Data[0];
+			if(Mode_7_Count == 16)
+				{
+					Buzz_Mode(2);    //计时开始
+				}
+			Mode_7_Count++;
+			if(Mode_7_Count>1020+16 | Data[1] == 0xff) 
+			{
+				MyDMA_Init((uint32_t)RxData+15,(uint32_t)Store_Data+2);
+				MyDMA_Transfer();	
+				Store_Data[1] = Mode_7_Count-16;  //-16是直接在程序上修正，按理说不需要。对，按理。  
+				Store_Save();				
+				goto Mode_7_Break;                                     
+			}
+		}
+		if(Mode_7_Count>=15)
+		{
+
+			Motor_State(Data[0]);			
+		}
+	}
+	Mode_7_Break:
+	Buzz_Mode(2);         //计时结束
+}
+
+
+
 //void Mode_5()       //睡眠模式
 //{
 //	
@@ -161,7 +165,7 @@ void Mode_6()   //启动记录
 
 
 
-void TIM2_IRQHandler(void)             //没资源啊没资源，只能共用定时器中断了，希望不会出啥茬子。
+void TIM2_IRQHandler(void)               //没资源啊没资源，只能共用定时器中断了，希望不会出啥茬子。
 {
 	uint16_t State;
 	if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
@@ -171,17 +175,17 @@ void TIM2_IRQHandler(void)             //没资源啊没资源，只能共用定
 			Temp ++;
 			if(Temp%2 == 1)
 			{
-				aaaaa = ~(((uint8_t)Store_Data[BackTrack_Count] >> 8) & 0xe0);
+				aaaaa = ~(uint8_t)((Store_Data[BackTrack_Count] >> 8) & 0xe0);
 				aaaaa &= 0xe0;
-				aaaaa += (((uint8_t)Store_Data[BackTrack_Count] >> 8) & 0x03);
+				aaaaa += (uint8_t)((Store_Data[BackTrack_Count] >> 8) & 0x03);
 				Motor_State((uint8_t)aaaaa);				
 			}
 			else
 			{
 				aaaaa = ~((uint8_t)Store_Data[BackTrack_Count] & 0xe0);
 				aaaaa &= 0xe0;
-				aaaaa += ((uint8_t)Store_Data[BackTrack_Count] & 0x03);   //怀疑是运算符优先级问题，重点排查
-				Motor_State((uint8_t)aaaaa);;
+				aaaaa += ((uint8_t)Store_Data[BackTrack_Count] & 0x03);   
+				Motor_State((uint8_t)aaaaa);
 				BackTrack_Count --;
 			}
 			if(BackTrack_Count == 2)
@@ -212,27 +216,11 @@ void TIM2_IRQHandler(void)             //没资源啊没资源，只能共用定
 				Buzz_Mode(2);    
 			}
 		}
-		
-		
-		
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
 	}
 }
 
 
-
-//	if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
-//	{
-//		Data = ~(RxData1[Num] & 0xef);
-//		Data += (RxData1[Num] & 0x04);
-//		Motor_State(Data);
-//		Num--;
-//		if(Num == 0)
-//		{
-//			Motor_State(0);
-//			BackTrack_Flag = 1;
-//		}
-//		
 		
 /*
 uint8_t Mode_2()            //观察模式

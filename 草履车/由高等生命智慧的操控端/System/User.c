@@ -7,7 +7,7 @@
 #include "nRF24L01.h"
 #include "Timer.h"
 
-#define TimeLimit   180                      //记录操作的时间上限为x秒,参数范围 0~204秒
+#define TimeLimit   60                      //记录操作的时间上限为x秒,参数范围 0~204秒，不建议超过1分钟，否则芯片写入FLASH将耗费大量时间。
 
 uint8_t direction[2];
 
@@ -81,7 +81,7 @@ void TIM2_IRQHandler(void)
 			}
 			if(Time == TimeLimit) 
 			{
-				TxData[1] = 0xff; //配置上限时间，达到则置标志位。（也可以用TxData[0]规定特殊数据，则可完全舍弃TxData[1]）
+				TxData[1] = 0xff; //配置上限时间，达到则置标志位。也可以用TxData[0]规定特殊数据，则可完全舍弃TxData[1]
 				Time_Flag = 1;    //计时结束
 			}    
 		}

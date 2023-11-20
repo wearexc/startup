@@ -780,16 +780,6 @@
               <FileType>5</FileType>
               <FilePath>.\Hardware\W25Q64_Ins.h</FilePath>
             </File>
-            <File>
-              <FileName>HC_SR04.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\HC_SR04.c</FilePath>
-            </File>
-            <File>
-              <FileName>HC_SR04.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\HC_SR04.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>

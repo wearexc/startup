@@ -27,16 +27,12 @@ Project File Date:  11/18/2023
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 5 (build 528)', folder: 'D:\keil\ARM\ARMCC\Bin'
 Build target 'Target 1'
-compiling User.c...
-System\Timer.h(8): warning:  #1295-D: Deprecated declaration Buzz_Init - give arg types
-  void Buzz_Init();
-System\User.c(166): warning:  #177-D: variable "State"  was declared but never referenced
-  	uint16_t State;
-System\User.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=5548 RO-data=332 RW-data=28 ZI-data=3692  
-FromELF: creating hex file...
-".\Objects\Project.axf" - 0 Error(s), 2 Warning(s).
+.\Objects\Project.axf: Error: L6200E: Symbol TIM2_IRQHandler multiply defined (by hc_sr04.o and user.o).
+Not enough information to list image symbols.
+Not enough information to list load addresses in the image map.
+Finished: 2 information, 0 warning and 1 error messages.
+".\Objects\Project.axf" - 1 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -50,7 +46,8 @@ Package Vendor: Keil
   D:\keil\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:01
+Target not created.
+Build Time Elapsed:  00:00:00
 </pre>
 </body>
 </html>
