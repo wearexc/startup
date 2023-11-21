@@ -29,4 +29,4 @@
 .\objects\hc_sr04.o: .\Library\stm32f10x_wwdg.h
 .\objects\hc_sr04.o: .\Library\misc.h
 .\objects\hc_sr04.o: .\System\Delay.h
-.\objects\hc_sr04.o: Hardware\OLED.h
+.\objects\hc_sr04.o: .\System\User.h

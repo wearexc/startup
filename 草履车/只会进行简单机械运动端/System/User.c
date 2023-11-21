@@ -8,10 +8,10 @@
 #include "HC_SR04.h"
 
 #define  Mode_1_WarnBit 60000  //警告位，当一段时间没有收到控制信号，将自动急停。建议取值高些
-							
+#define	 Keep_Length  40      //跟随模式，应该保持的距离，取值0~450cm。			
 
 uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode_1_Cheak,Mode_1_Data,Mode,BackTrack_Flag,Record_Flag;
-uint16_t WarnBit,BackTrack_Num,Store_Count,BackTrack_Count,aaaaa,Temp;
+uint16_t WarnBit,BackTrack_Num,Store_Count,BackTrack_Count,HC_SR04_count,aaaaa,Temp;
 uint8_t RxData[1020+16];
 
 
@@ -74,9 +74,39 @@ void Mode_1()            //实时遥控模式
 	}
 }
 
-void Mode_3()  //跟随模式
+void  Mode_2()            //观察模式
 {
-	
+	Servo_Init();
+	HC_SR04_Init();
+	while(1)
+	{
+		Servo_SetAngle(90);
+	}
+}
+
+
+void Mode_3()  			//跟随模式，这个模式太蠢了，只能直线跟随，随便哪条狗都能拐跑草履车，什么图像识别？不知道。。。
+{
+	uint8_t Length,Temp,Gap;
+	Gap = 20;                   //误差位，不然车太鬼畜了。
+	HC_SR04_Init();
+	while(1)
+	{
+		NRF24L01_RxPacket(Data);
+		Length = Get_Length();
+		if((Keep_Length - Length) == Gap | (Keep_Length - Length) == Gap) Length = Keep_Length; //相差Gap厘米，则不动。
+		if(Length > Keep_Length)
+		{
+			Temp = (Data[0] & 0x03);       //摇杆可以控制跟随速度
+			Motor_State(Temp + 0x20);
+		}
+		else
+		{
+			Temp = (Data[0] & 0x03);
+			Motor_State(Temp + 0xc0);
+		}
+		if((Data[0] & 0x1c) != 0x08) break;
+	}
 	
 }
 	
@@ -211,6 +241,7 @@ void TIM2_IRQHandler(void)               //没资源啊没资源，只能共用�
 				Buzz_Mode(2);    
 			}
 		}
+		HC_SR04_count++;    //超超超声波计数用
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
 	}
 }
