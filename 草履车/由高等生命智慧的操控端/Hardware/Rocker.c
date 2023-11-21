@@ -7,6 +7,7 @@
 #define LowerLimit       1000
 
 uint16_t Rocker[2];  //Rocker[0]为y轴，1为x轴
+uint8_t Host_Mode;
 
 void Rocker_Init(void)
 {
@@ -100,6 +101,6 @@ uint8_t Rocker_Data()   //摇杆按键数据处理，注释为xy轴方向。
 	{
 		temp += 4*Mode;           //置模式位
 	}
-	
+	Host_Mode = ((temp>> 2) & 0x07);
 	return temp;
 }

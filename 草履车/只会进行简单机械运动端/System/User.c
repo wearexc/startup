@@ -7,10 +7,8 @@
 #include "Store.h"
 #include "HC_SR04.h"
 
-#define  Mode_1_WarnBit 50  //警告位，当一段时间没有收到控制信号，将自动急停。（应该是踩内存，无所谓了）
-							//如果我删除这个define，只定义了一个WarnBit不赋值，那么因为收到信号踩内存被自动赋值
-							//没收到信号则自动--直到为0，然后发出警告。应该是可行的，别人还会摸不着头脑
-							//这段程序到处植入，如果哪天有人维护把那BUG修了，嘿嘿。。。
+#define  Mode_1_WarnBit 60000  //警告位，当一段时间没有收到控制信号，将自动急停。建议取值高些
+							
 
 uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode_1_Cheak,Mode_1_Data,Mode,BackTrack_Flag,Record_Flag;
 uint16_t WarnBit,BackTrack_Num,Store_Count,BackTrack_Count,aaaaa,Temp;
@@ -131,16 +129,13 @@ void Mode_8()            //记录操作
 		if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_10) == 0)  //获取蓝牙中断，按理说不该在里面执行大量程序，这会加重丢包（管他呢）
 		{
 			RxData[Mode_7_Count] = Data[0];
-			if(Mode_7_Count == 16)
-				{
-					Buzz_Mode(2);    //计时开始
-				}
+			if(Mode_7_Count == 1)   Buzz_Mode(2);    //计时开始
 			Mode_7_Count++;
 			if(Mode_7_Count>1020+16 | Data[1] == 0xff) 
 			{
-				MyDMA_Init((uint32_t)RxData+15,(uint32_t)Store_Data+2);
+				MyDMA_Init((uint32_t)RxData,(uint32_t)Store_Data+2);
 				MyDMA_Transfer();	
-				Store_Data[1] = Mode_7_Count-16;  //-16是直接在程序上修正，按理说不需要。对，按理。  
+				Store_Data[1] = Mode_7_Count - 2;    
 				Store_Save();				
 				goto Mode_7_Break;                                     
 			}
@@ -188,7 +183,7 @@ void TIM2_IRQHandler(void)               //没资源啊没资源，只能共用�
 				Motor_State((uint8_t)aaaaa);
 				BackTrack_Count --;
 			}
-			if(BackTrack_Count == 2)
+			if(BackTrack_Count == 1)
 			{
 				Motor_State(0);
 				BackTrack_Flag = 1;

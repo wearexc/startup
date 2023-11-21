@@ -113,7 +113,7 @@ void EXTI1_IRQHandler(void)    //最左侧按键，用于控制状态
 	if (EXTI_GetITStatus(EXTI_Line1) == SET)
 	{
 		Mode_Flag = 1;
-		if(Mode == 5) Mode = 0;
+		if(Mode == 4) Mode = -1;
 		Mode ++;
 		Delay_ms(20);
 		while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == 0);

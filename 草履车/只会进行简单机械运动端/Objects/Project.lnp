@@ -36,7 +36,6 @@
 ".\objects\motor.o"
 ".\objects\pwm.o"
 ".\objects\w25q64.o"
-".\objects\hc_sr04.o"
 ".\objects\main.o"
 ".\objects\stm32f10x_it.o"
 --strict --scatter ".\Objects\Project.sct"
