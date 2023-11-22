@@ -344,7 +344,7 @@ void OLED_DrawBMP(unsigned char x0, unsigned char y0,unsigned char x1, unsigned 
 
 
 void OLED_BMP(uint8_t Rocker)
-{	
+{
 	if(Rocker != OLED_Temp)
 	{
 		OLED_Clear();
@@ -356,6 +356,7 @@ void OLED_BMP(uint8_t Rocker)
 	else if((Rocker & 0xe0) == 0x60)   OLED_DrawBMP(0,0,28,5,PI[5]);
 	else if((Rocker & 0xe0) == 0x80)   OLED_DrawBMP(0,0,28,5,PI[6]);
 		else  OLED_DrawBMP(0,0,28,3,PI[7]);
+	OLED_DrawBMP(0,4,79,7,PI[11]);	
 	OLED_Temp = Rocker;
 }
 

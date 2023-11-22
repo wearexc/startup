@@ -7,8 +7,10 @@
 #include "Store.h"
 #include "HC_SR04.h"
 
-#define  Mode_1_WarnBit 60000  //警告位，当一段时间没有收到控制信号，将自动急停。建议取值高些
-#define	 Keep_Length  40      //跟随模式，应该保持的距离，取值0~450cm。			
+#define  Mode_1_WarnBit   60000        //警告位，当一段时间没有收到控制信号，将自动急停。建议取值高些
+#define	 Keep_Length      40          //跟随模式，应该保持的距离，取值0~450cm。			
+#define  Observe_Num  	  1          //观察模式，每x轮将接受一次主机信号，决定是否继续观察。
+#define  Observe_Send     3			//观察模式，收集的数据重复发送次数（不建议设为1，怕丢包）
 
 uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode_1_Cheak,Mode_1_Data,Mode,BackTrack_Flag,Record_Flag;
 uint16_t WarnBit,BackTrack_Num,Store_Count,BackTrack_Count,HC_SR04_count,aaaaa,Temp;
@@ -26,17 +28,12 @@ void Status(uint8_t Data)  //处理小车状态
 //		}
 }
 
-void SignWarn()     //信号警告，失去控制时紧急制动。
-{
-	
-}
 
 
 
 void Mode_Init()             //上电模式，用于初始化
 {
 	Motor_Init();
-	W25Q64_Init();
 	NRF24L01_Init();
 	NRF24L01_Rx_Mode();
 	Buzz_Init();
@@ -78,10 +75,54 @@ void  Mode_2()            //观察模式
 {
 	Servo_Init();
 	HC_SR04_Init();
+	NRF24L01_Tx_Mode();
+	uint8_t i,Num,Temp;
+	uint16_t Length;
+	Servo_SetAngle(0);
+	Num = 0;
+	Temp = 0;
+	Data[0] = 0;
 	while(1)
-	{
-		Servo_SetAngle(90);
+	{	
+		if(Temp == 5) 
+		{
+			Temp = 0;
+			Num++;
+		}
+		Servo_SetAngle(Temp * 45);
+		Delay_ms(500);                 //请给舵机一点转向的时间
+		Length	= Get_Length();
+		Data[1] =  Temp*16;            //Temp存储在高4位。防止与接收检测的数据冲突。
+		Data[2] = (Length >> 8);
+		Data[3] =  Length;
+		for(i = 0;i < Observe_Send;i++)
+		{
+			NRF24L01_TxPacket(Data);
+		}
+		Temp++;
+		
+		if(Num == Observe_Num)
+		{
+			Num = 0;
+			NRF24L01_Rx_Mode();
+			for(i = 0;i < 100;i++)     //i值不建议设小，否则容易因为接收不到数据而无法结束
+			{
+				NRF24L01_RxPacket(Data);
+			}
+			
+			if(Data[0] != 0x00)   //自定义的一个特殊数据
+			{
+				goto Mode_2_Break;
+				
+			}
+			else  NRF24L01_Tx_Mode();
+		}
 	}
+	Mode_2_Break:
+	Servo_SetAngle(90);
+	Delay_ms(200);
+	Motor_Init();
+	NRF24L01_Rx_Mode();
 }
 
 

@@ -101,14 +101,15 @@ uint8_t NRF24L01_TxPacket(uint8_t *TxData)
 	return 0xff;
 }
 
-uint8_t NRF24L01_RxPacket(uint8_t *RxData)
+uint8_t NRF24L01_RxPacket(uint8_t *RxData)   
 {
-	uint8_t Data;
+	uint8_t Data,Length;
+	Length = sizeof(RxData) / sizeof(RxData [0]);
 	Data = NRF24L01_Read_Reg(NRP24L01_STATUS);
 	NRF24L01_Write_Reg(NRP24L01_W_REGISTER + NRP24L01_STATUS,Data);
 	if(Data & NRP24L01_RX_OK)
 	{
-		NRF24L01_Read_Buf(NRP24L01_R_RX_PAYLOAD,RxData,32);
+		NRF24L01_Read_Buf(NRP24L01_R_RX_PAYLOAD,RxData,Length);
 		NRF24L01_Write_Reg(NRP24L01_FLUSH_RX,0xff);
 		return 1;
 	}

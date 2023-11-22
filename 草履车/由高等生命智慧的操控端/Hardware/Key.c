@@ -118,7 +118,8 @@ void EXTI1_IRQHandler(void)    //最左侧按键，用于控制状态
 		Delay_ms(20);
 		while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == 0);
 		Delay_ms(20);
-		TxData[1] = 0x00;
+		Data[1] = 0x00;
+		if(BackTrack_Flag == 1 | BackTime_Flag == 1 | Record_Flag == 1) Mode --; //执行MODE6,7,8，将无法切换状态。
 		EXTI_ClearITPendingBit(EXTI_Line1);
 	}
 }
@@ -128,12 +129,13 @@ void EXTI0_IRQHandler(void)   //左三按键，用于启动回溯
 
 	if (EXTI_GetITStatus(EXTI_Line0) == SET)
 	{
-		TxData[1] = 0;
+		Data[1] = 0;
 		if(BackTrack_Flag == 1)
 		{
 			BackTrack_Flag = 0;
 		}
 		else BackTrack_Flag = 1;
+		if(BackTime_Flag == 1 | Record_Flag == 1) BackTrack_Flag = 0; //执行特殊模式，将无法切换状态。
 		Delay_ms(20);
 		while (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) == 0);
 		Delay_ms(20);
@@ -151,9 +153,10 @@ void EXTI3_IRQHandler(void)  //左二按键，用于记录操作
 			BackTime_Flag = 0;
 			History_Time = Time;
 			Time = 0;
-			TxData[1] = 0xff;
+			Data[1] = 0xff;
 		}
 		else BackTime_Flag = 1 ;
+		if(BackTrack_Flag == 1 | Record_Flag == 1) BackTime_Flag = 0; //执行特殊模式，将无法切换状态。
 		Delay_ms(20);
 		while (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3) == 0);
 		Delay_ms(20);
@@ -161,7 +164,7 @@ void EXTI3_IRQHandler(void)  //左二按键，用于记录操作
 	}
 }
 
-void EXTI9_5_IRQHandler(void)
+void EXTI9_5_IRQHandler(void)   //控制速度
 {
 
 	if (EXTI_GetITStatus(EXTI_Line7) == SET)
@@ -174,7 +177,7 @@ void EXTI9_5_IRQHandler(void)
 
 }
 
-void EXTI15_10_IRQHandler(void)
+void EXTI15_10_IRQHandler(void)      //最右侧按键，执行已记录操作
 {
 	if (EXTI_GetITStatus(EXTI_Line13) == SET)
 	{
@@ -183,6 +186,7 @@ void EXTI15_10_IRQHandler(void)
 			Record_Flag = 0;
 		}
 		else Record_Flag = 1;
+		if(BackTrack_Flag == 1 | BackTime_Flag == 1) Record_Flag = 0; //执行MODE6,7,8，将无法切换状态。
 		Delay_ms(20);
 		while (GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_13) == 0);
 		Delay_ms(20);
