@@ -11,6 +11,7 @@ void Mode_Init();
 void Mode_0();
 void Mode_1();
 void Mode_2();
+void Mode_4();
 
 void Mode_7();
 #endif

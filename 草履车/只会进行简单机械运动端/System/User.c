@@ -7,25 +7,30 @@
 #include "Store.h"
 #include "HC_SR04.h"
 
-#define  Mode_1_WarnBit   60000        //警告位，当一段时间没有收到控制信号，将自动急停。建议取值高些
-#define	 Keep_Length      40          //跟随模式，应该保持的距离，取值0~450cm。			
+#define  Comm_WarnBit   60000           //警告位，当一段时间没有收到控制信号，将自动急停。建议取值高些
+#define	 Keep_Length      40           //跟随模式，应该保持的距离，取值0~450cm。			
+#define	 Avoid_Length     50          //避障，距离障碍物小于xcm将避开行驶。
 #define  Observe_Num  	  1          //观察模式，每x轮将接受一次主机信号，决定是否继续观察。
 #define  Observe_Send     3			//观察模式，收集的数据重复发送次数（不建议设为1，怕丢包）
 
-uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode_1_Cheak,Mode_1_Data,Mode,BackTrack_Flag,Record_Flag;
+
+uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode_1_Data,Mode,BackTrack_Flag,Record_Flag;
 uint16_t WarnBit,BackTrack_Num,Store_Count,BackTrack_Count,HC_SR04_count,aaaaa,Temp;
 uint8_t RxData[1020+16];
 
 
-void Status(uint8_t Data)  //处理小车状态
+void Comm_Check()     //通信检查
 {
-//	uint8_t Temp;
-//	temp = Data & 0x1c;
-//	if(temp == 0x00) Mode = 0;
-//		else
-//		{
-//			Mode = temp/4;
-//		}
+	if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_10) == 0)  //获取蓝牙中断
+	{
+		WarnBit = Comm_WarnBit;
+	}
+	else WarnBit--;
+	if(WarnBit == 0)
+	{
+		Motor_State(0);      //车停
+		                    //嗡鸣器警告
+	}
 }
 
 
@@ -38,40 +43,21 @@ void Mode_Init()             //上电模式，用于初始化
 	NRF24L01_Rx_Mode();
 	Buzz_Init();
 	Store_Init();
-	Mode_1_Cheak = 0;
 	Mode = 0;
-	WarnBit = Mode_1_WarnBit;
+	WarnBit = Comm_WarnBit;
 //	W25Q64_Init();
 //	W25Q64_SectorErase(0x000000);
 	//嗡鸣器响起1s;
 }
 
-void Mode_1()            //实时遥控模式
+void Mode_0()            //实时遥控模式
 {
 	NRF24L01_RxPacket(Data);
-	if((Data[0] & 0x1c) == 0x1c)
-	{
-//		Mode_8();
-	}
-	if(Mode_1_Cheak == 0)
-	{
-		Motor_State(Data[0]);
-	}
-	if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_10) == 0)  //获取蓝牙中断
-	{
-		WarnBit = Mode_1_WarnBit;
-		//关闭嗡鸣器警告
-	}
-	else WarnBit--;
-	if(WarnBit == 0)
-	{
-		Mode_1_Cheak = 1;
-		Motor_State(0);
-		//嗡鸣器警告
-	}
+	Motor_State(Data[0]);
+    //嗡鸣器
 }
 
-void  Mode_2()            //观察模式
+void  Mode_1()            //观察模式
 {
 	Servo_Init();
 	HC_SR04_Init();
@@ -126,7 +112,7 @@ void  Mode_2()            //观察模式
 }
 
 
-void Mode_3()  			//跟随模式，这个模式太蠢了，只能直线跟随，随便哪条狗都能拐跑草履车，什么图像识别？不知道。。。
+void Mode_2()  			//跟随模式，这个模式太蠢了，只能直线跟随，随便哪条狗都能拐跑草履车，什么图像识别？不知道。。。
 {
 	uint8_t Length,Temp,Gap;
 	Gap = 20;                   //误差位，不然车太鬼畜了。
@@ -151,9 +137,51 @@ void Mode_3()  			//跟随模式，这个模式太蠢了，只能直线跟随，
 	
 }
 	
+void Mode_3()
+{
+	HC_SR04_Init();
+	uint8_t   Num,Speed;
+	uint16_t  Length;
+	while(1)
+	{
+		NRF24L01_RxPacket(Data);
+		Speed = (Data[0] & 0x03);
+		Length = Get_Length();
+		Num = TIM_GetCounter(TIM3)%2;    //伪随机（AD采样太麻烦了，反正我只要两个随机数。）
+		if(Length < 50)
+		{
+			Avoid:
+			Length = Get_Length();
+			Motor_State(0xc0+Speed);     //先退退
+			Delay_ms(1500);
+			if(Num == 1)
+			{
+				Motor_State(0x80+Speed);     //   ↑ + ←
+				Delay_ms(1000);
+				Length = Get_Length();
+				if(Length < 50)  goto Avoid;
+			}
+			else
+			{
+				 Motor_State(0x40+Speed);     //   ↑ + →
+		 	     Delay_ms(1000);
+		    	 Length = Get_Length();
+				 if(Length < 50)  goto Avoid;
+			}
+		}
+		Motor_State(0x20+Speed);
+		if((Data[0] & 0x1c) != 0x0c)  break;
+	}
+}
+
+void Mode_4()
+{
+	__WFI();      //懒得关时钟了，请让我摸鱼一下
+}
 
 
-void Mode_6()   //启动记录
+
+void Mode_5()   //启动记录
 {
 	BackTrack_Count = (Store_Data[1] >> 8);
 	Store_Count = 1;
@@ -172,7 +200,7 @@ void Mode_6()   //启动记录
 	Buzz_Mode(3);         //执行完毕,提醒用户切换模式，嗡鸣结束后操作将再进行一次。	
 }
 
-void Mode_7()          //回溯模式，开始回溯
+void Mode_6()          //回溯模式，开始回溯
 {
 	Timer_Init();
 	BackTrack_Count = (Store_Data[1]/2)+1;	//实验才是检测代码的唯一标准，执行对了就行。
@@ -191,7 +219,7 @@ void Mode_7()          //回溯模式，开始回溯
 	
 }	
 
-void Mode_8()            //记录操作
+void Mode_7()            //记录操作
 {
 	uint16_t Mode_7_Count = 0;
 	while(1)
@@ -241,16 +269,16 @@ void TIM2_IRQHandler(void)               //没资源啊没资源，只能共用�
 			Temp ++;
 			if(Temp%2 == 1)
 			{
-				aaaaa = ~(uint8_t)((Store_Data[BackTrack_Count] >> 8) & 0xe0);
-				aaaaa &= 0xe0;
-				aaaaa += (uint8_t)((Store_Data[BackTrack_Count] >> 8) & 0x03);
-				Motor_State((uint8_t)aaaaa);				
+				State = ~(uint8_t)((Store_Data[BackTrack_Count] >> 8) & 0xe0);
+				State &= 0xe0;
+				State += (uint8_t)((Store_Data[BackTrack_Count] >> 8) & 0x03);
+				Motor_State((uint8_t)State);				
 			}
 			else
 			{
-				aaaaa = ~((uint8_t)Store_Data[BackTrack_Count] & 0xe0);
-				aaaaa &= 0xe0;
-				aaaaa += ((uint8_t)Store_Data[BackTrack_Count] & 0x03);   
+				State = ~((uint8_t)Store_Data[BackTrack_Count] & 0xe0);
+				State &= 0xe0;
+				State += ((uint8_t)Store_Data[BackTrack_Count] & 0x03);   
 				Motor_State((uint8_t)aaaaa);
 				BackTrack_Count --;
 			}
@@ -266,13 +294,13 @@ void TIM2_IRQHandler(void)               //没资源啊没资源，只能共用�
 			Temp++;
 			if(Temp%2 == 1)
 			{
-				aaaaa = ((uint8_t)Store_Data[Store_Count+1]);
-				Motor_State((uint8_t)aaaaa);
+				State = ((uint8_t)Store_Data[Store_Count+1]);
+				Motor_State((uint8_t)State);
 			}
 			else
 			{
-				aaaaa = (Store_Data[Store_Count+1]>> 8);
-				Motor_State((uint8_t)aaaaa);
+				State = (Store_Data[Store_Count+1]>> 8);
+				Motor_State((uint8_t)State);
 				Store_Count++;
 			}
 			if(Temp == (uint8_t)Store_Data[1])

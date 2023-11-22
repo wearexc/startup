@@ -19,6 +19,9 @@ float Distance;
 int main(void)          //防丢操作可以丢到主函数。Mode1的防丢因为BUG失效
 {
 	Mode_Init();
+//	Buzz_Init();
+//	Buzz_Mode(3);
+	
 	while (1)
 	{
 //		Mode_2();
@@ -28,14 +31,14 @@ int main(void)          //防丢操作可以丢到主函数。Mode1的防丢因�
 //		Distance = Get_Length();
 //		NRF24L01_RxPacket(Data);
 //////		Mode_8();
-		if((Data[0] & 0x1c) == 0x00) Mode_1();     			//实时控制
-		else if((Data[0] & 0x1c) == 0x04) Mode_2();			//观察模式
-		else if((Data[0] & 0x1c) == 0x08) Mode_3();			//跟随模式
-//		else if((Data[0] & 0x1c) == 0x0c) Mode_4();			//避障模式
-//		else if((Data[0] & 0x1c) == 0x10) Mode_5();			//睡眠模式
-		else if((Data[0] & 0x1c) == 0x14) Mode_6();			//启动记录
-		else if((Data[0] & 0x1c) == 0x18) Mode_7();			//启动回溯
-		else if((Data[0] & 0x1c) == 0x1c) Mode_8();			//记录操作
+		if((Data[0] & 0x1c) == 0x00) Mode_0();     			//实时控制
+		else if((Data[0] & 0x1c) == 0x04) Mode_1();			//观察模式
+		else if((Data[0] & 0x1c) == 0x08) Mode_2();			//跟随模式
+		else if((Data[0] & 0x1c) == 0x0c) Mode_3();			//避障模式
+		else if((Data[0] & 0x1c) == 0x10) Mode_4();			//睡眠模式
+		else if((Data[0] & 0x1c) == 0x14) Mode_5();			//启动记录
+		else if((Data[0] & 0x1c) == 0x18) Mode_6();			//启动回溯
+		else if((Data[0] & 0x1c) == 0x1c) Mode_7();			//记录操作
 	}
 }
 

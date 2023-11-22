@@ -357,6 +357,11 @@ void OLED_BMP(uint8_t Rocker)
 	else if((Rocker & 0xe0) == 0x80)   OLED_DrawBMP(0,0,28,5,PI[6]);
 		else  OLED_DrawBMP(0,0,28,3,PI[7]);
 	OLED_DrawBMP(0,4,79,7,PI[11]);	
+	if(Rocker  == 0xff)   
+	{
+		OLED_Clear();
+		OLED_DrawBMP(0,0,117,7,PI[12]);   //睡眠模式
+	}
 	OLED_Temp = Rocker;
 }
 

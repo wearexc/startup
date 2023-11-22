@@ -21,7 +21,7 @@ int main(void)
 		else if(Host_Mode == 0x01) Mode_1();			//观察模式
 //		else if(Host_Mode == 0x02) Mode_2();			//跟随模式
 //		else if(Host_Mode == 0x03) Mode_3();			//避障模式
-//		else if(Host_Mode == 0x04) Mode_4();			//睡眠模式
+		else if(Host_Mode == 0x04) Mode_4();			//睡眠模式
 //		else if(Host_Mode == 0x05) Mode_5();			//启动记录
 //		else if(Host_Mode == 0x06) Mode_6();			//启动回溯
 //		else if(Host_Mode == 0x07) Mode_7();			//记录操作

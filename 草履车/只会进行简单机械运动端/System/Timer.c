@@ -103,10 +103,19 @@ void Buzz_Mode(uint8_t Sound)
 			GPIO_SetBits(GPIOA, GPIO_Pin_0);
 			Delay_ms(1000);
 		}
+	}
+	if(Sound == 4)
+	{
+		uint8_t i;
+		for(i = 0 ;i < 30;i++)
+		{
+			GPIO_ResetBits(GPIOA, GPIO_Pin_0);
+			Delay_ms(100);
+			GPIO_SetBits(GPIOA, GPIO_Pin_0);
+			Delay_ms(100);
+		}
 
 	}
-	
-	
 }
 
 

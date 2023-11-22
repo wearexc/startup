@@ -17,8 +17,19 @@ uint8_t Data[4],RxData[4],Check[1] = {0xee};
 
 
 
-//所有驱动进行初始化
-//摇杆
+
+
+void Sleep()     //睡睡睡
+{
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,DISABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, DISABLE);    
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, DISABLE);
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1,   DISABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, DISABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,DISABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, DISABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, DISABLE);
+}
 
 void Mode_Init()           //初始化
 {
@@ -64,6 +75,16 @@ void Mode_1()           //观察模式
 	}
 	NRF24L01_Tx_Mode();
 }
+
+void Mode_4()
+{
+	OLED_Clear();
+	OLED_BMP(0xff);
+	Sleep();
+	__WFI();
+	Mode_Init();
+}
+
 
 void Mode_7()           //记录操作
 {
