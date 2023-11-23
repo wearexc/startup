@@ -6,6 +6,7 @@
 
 uint16_t Store_Data[STORE_COUNT];
 
+/*闪存初始化*/
 void Store_Init(void)
 {
 	if (MyFLASH_ReadHalfWord(STORE_START_ADDRESS) != 0xA5A5)
@@ -24,6 +25,7 @@ void Store_Init(void)
 	}
 }
 
+/*存储数组至闪存*/
 void Store_Save(void)
 {
 	MyFLASH_ErasePage(STORE_START_ADDRESS);
@@ -33,6 +35,7 @@ void Store_Save(void)
 	}
 }
 
+/*清空闪存*/
 void Store_Clear(void)
 {
 	for (uint16_t i = 1; i < STORE_COUNT; i ++)

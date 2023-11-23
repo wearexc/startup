@@ -27,10 +27,25 @@ Project File Date:  11/14/2023
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 5 (build 528)', folder: 'D:\keil\ARM\ARMCC\Bin'
 Build target 'Target 1'
-compiling OLED.c...
+compiling main.c...
+.\Hardware\Rocker.h(7): warning:  #1295-D: Deprecated declaration Rocker_Data - give arg types
+  uint8_t Rocker_Data();
+.\System\User.h(10): warning:  #1295-D: Deprecated declaration Mode_Init - give arg types
+  void Mode_Init();
+.\System\User.h(11): warning:  #1295-D: Deprecated declaration Mode_0 - give arg types
+  void Mode_0();
+.\System\User.h(12): warning:  #1295-D: Deprecated declaration Mode_1 - give arg types
+  void Mode_1();
+.\System\User.h(13): warning:  #1295-D: Deprecated declaration Mode_2 - give arg types
+  void Mode_2();
+.\System\User.h(14): warning:  #1295-D: Deprecated declaration Mode_4 - give arg types
+  void Mode_4();
+.\System\User.h(16): warning:  #1295-D: Deprecated declaration Mode_7 - give arg types
+  void Mode_7();
+User\main.c: 7 warnings, 0 errors
 linking...
 Program Size: Code=6792 RO-data=1852 RW-data=13352 ZI-data=1632  
-".\Objects\Project.axf" - 0 Error(s), 0 Warning(s).
+".\Objects\Project.axf" - 0 Error(s), 7 Warning(s).
 
 <h2>Software Packages used:</h2>
 

@@ -21,13 +21,13 @@ uint8_t Data[4],RxData[4],Check[1] = {0xee};
 
 void Sleep()     //睡睡睡
 {
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,DISABLE);
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, DISABLE);    
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, DISABLE);
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1,   DISABLE);
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, DISABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,DISABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, DISABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, DISABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,  DISABLE);    
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1,  DISABLE);
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1,    DISABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2,  DISABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, DISABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,  DISABLE);
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, DISABLE);
 }
 

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\Project.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\Project.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Wed Nov 22 22:37:40 2023
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Thu Nov 23 11:43:56 2023
 <BR><P>
 <H3>Maximum Stack Usage =         96 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -658,7 +658,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[7a]"></a>Mode_5</STRONG> (Thumb, 66 bytes, Stack size 8 bytes, user.o(i.Mode_5))
+<P><STRONG><a name="[7a]"></a>Mode_5</STRONG> (Thumb, 72 bytes, Stack size 8 bytes, user.o(i.Mode_5))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = Mode_5 &rArr; Timer_Init &rArr; NVIC_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timer_Init
@@ -668,7 +668,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[7c]"></a>Mode_6</STRONG> (Thumb, 66 bytes, Stack size 8 bytes, user.o(i.Mode_6))
+<P><STRONG><a name="[7c]"></a>Mode_6</STRONG> (Thumb, 72 bytes, Stack size 8 bytes, user.o(i.Mode_6))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = Mode_6 &rArr; Timer_Init &rArr; NVIC_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Timer_Init
@@ -692,7 +692,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[81]"></a>Mode_Init</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, user.o(i.Mode_Init))
+<P><STRONG><a name="[81]"></a>Mode_Init</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, user.o(i.Mode_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = Mode_Init &rArr; Motor_Init &rArr; PWM_Init &rArr; GPIO_Init
 </UL>
 <BR>[Calls]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Store_Init
@@ -847,7 +847,8 @@ Global Symbols
 <LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NRF24L01_Read_Reg
 <LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NRF24L01_Read_Buf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_7
+<BR>[Called By]<UL><LI><a href="#[44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_7
 <LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_3
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_2
 <LI><a href="#[6f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_1
@@ -1112,7 +1113,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f10x_md.o(.text)
 </UL>
-<P><STRONG><a name="[29]"></a>TIM2_IRQHandler</STRONG> (Thumb, 322 bytes, Stack size 8 bytes, user.o(i.TIM2_IRQHandler))
+<P><STRONG><a name="[29]"></a>TIM2_IRQHandler</STRONG> (Thumb, 320 bytes, Stack size 8 bytes, user.o(i.TIM2_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = TIM2_IRQHandler &rArr; Motor_State &rArr; Motor_SetRightSpeed &rArr; PWM_SetRightCompare
 </UL>
 <BR>[Calls]<UL><LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_State
@@ -1236,10 +1237,11 @@ Global Symbols
 <P><STRONG><a name="[8]"></a>UsageFault_Handler</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f10x_it.o(i.UsageFault_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f10x_md.o(RESET)
 </UL>
-<P><STRONG><a name="[44]"></a>main</STRONG> (Thumb, 148 bytes, Stack size 0 bytes, main.o(i.main))
+<P><STRONG><a name="[44]"></a>main</STRONG> (Thumb, 154 bytes, Stack size 0 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = main &rArr; Mode_1 &rArr; Motor_Init &rArr; PWM_Init &rArr; GPIO_Init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_Init
+<BR>[Calls]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;NRF24L01_RxPacket
+<LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_Init
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_7
 <LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_6
 <LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Mode_5

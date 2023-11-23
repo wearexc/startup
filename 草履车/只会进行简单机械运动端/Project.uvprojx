@@ -706,16 +706,6 @@
           <GroupName>Hardware</GroupName>
           <Files>
             <File>
-              <FileName>LED.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\LED.c</FilePath>
-            </File>
-            <File>
-              <FileName>LED.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\LED.h</FilePath>
-            </File>
-            <File>
               <FileName>OLED.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Hardware\OLED.c</FilePath>
@@ -764,21 +754,6 @@
               <FileName>PWM.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware\PWM.h</FilePath>
-            </File>
-            <File>
-              <FileName>W25Q64.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\W25Q64.c</FilePath>
-            </File>
-            <File>
-              <FileName>W25Q64.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\W25Q64.h</FilePath>
-            </File>
-            <File>
-              <FileName>W25Q64_Ins.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\W25Q64_Ins.h</FilePath>
             </File>
             <File>
               <FileName>HC_SR04.c</FileName>

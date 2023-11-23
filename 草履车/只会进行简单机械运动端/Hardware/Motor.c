@@ -10,6 +10,9 @@
 #define Motor_Right_IN2     GPIO_Pin_11
 #define Motor_Turn          30                 //转向参数设置
 
+
+
+/*电机初始化*/
 void Motor_Init(void)
 {
 	RCC_APB2PeriphClockCmd(RCC_GPIO, ENABLE);  
@@ -23,7 +26,14 @@ void Motor_Init(void)
 	PWM_Init();
 }
 
-void Motor_SetRightSpeed(int8_t Speed)   //设置小车右路速度
+
+
+/**
+  * @brief    设置小车右路速度
+  * @param    Speed 速度
+  * @retval 
+  */
+void Motor_SetRightSpeed(int8_t Speed)   
 {
 	if (Speed >= 0)
 	{
@@ -39,7 +49,14 @@ void Motor_SetRightSpeed(int8_t Speed)   //设置小车右路速度
 	}
 }
 
-void Motor_SetLiftSpeed(int8_t Speed)   //设置小车左路速度
+
+
+/**
+  * @brief    设置小车左路速度
+  * @param    Speed 速度
+  * @retval 
+  */
+void Motor_SetLiftSpeed(int8_t Speed) 
 {
 	if (Speed >= 0)
 	{
@@ -59,7 +76,7 @@ void Motor_SetLiftSpeed(int8_t Speed)   //设置小车左路速度
 
 /**
   * @brief  对接收数据进行处理
-  * @param  State 蓝牙接收数据。Speed 速度。Flag 接收标志位。WarnBit 警告位。Motor_Flag 标志位，使用后需手动清除
+  * @param  State 蓝牙接收数据。Rocker 摇杆（高3位），Speed 速度（低2位）
   * @retval 
   */
 void Motor_State(uint8_t State)

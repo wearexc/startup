@@ -8,7 +8,9 @@
 #define echoGPIO 	GPIO_Pin_3
  
  
-void HC_SR04_Init()     //超声波初始化
+ 
+/*超声波传感器初始化*/
+void HC_SR04_Init()     
 {
     RCC_APB2PeriphClockCmd(RCC_GPIO,ENABLE);
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
@@ -47,11 +49,12 @@ void HC_SR04_Init()     //超声波初始化
     TIM_Cmd(TIM2,DISABLE); 		
 }
  
-void Servo_Init()     //舵机初始化
+
+/*舵机初始化*/
+void Servo_Init()     
 {
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);   //这个定时器和小车驱动一样，所以只能停车观察。
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-	
 	
 	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
@@ -85,6 +88,13 @@ void Servo_SetAngle(float Angle)
 	TIM_SetCompare3(TIM3, Angle / 180 * 2000 + 500);
 }
 
+
+
+/**
+  * @brief    获取TIM2时间
+  * @param    HC_SR04_count 在TIM2中断的计数。t 秒
+  * @retval   时间：秒
+  */
 uint32_t Get_Timer(void)
 {
         uint32_t t = 0;
@@ -95,6 +105,12 @@ uint32_t Get_Timer(void)
         return t;
 }
  
+
+/**
+  * @brief    获取超声波检测距离
+  * @param    t 秒。length 距离，单位为cm
+  * @retval   超声波检测距离，单位cm。
+  */
  float Get_Length()
 {
     float t = 0,length = 0;

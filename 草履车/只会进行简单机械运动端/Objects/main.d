@@ -28,12 +28,5 @@
 .\objects\main.o: .\Library\stm32f10x_usart.h
 .\objects\main.o: .\Library\stm32f10x_wwdg.h
 .\objects\main.o: .\Library\misc.h
-.\objects\main.o: .\System\Delay.h
-.\objects\main.o: .\Hardware\OLED.h
 .\objects\main.o: .\Hardware\nRF24L01.h
-.\objects\main.o: .\Hardware\W25Q64.h
 .\objects\main.o: .\System\User.h
-.\objects\main.o: .\Hardware\Motor.h
-.\objects\main.o: .\System\Timer.h
-.\objects\main.o: .\Hardware\HC_SR04.h
-.\objects\main.o: .\System\Store.h

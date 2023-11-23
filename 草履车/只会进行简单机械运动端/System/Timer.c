@@ -1,6 +1,7 @@
 #include "stm32f10x.h"                  // Device header
 #include "Delay.h"
 
+/*定时器初始化*/
 void Timer_Init(void)
 {
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
@@ -30,7 +31,7 @@ void Timer_Init(void)
 	TIM_Cmd(TIM2, ENABLE);
 }
 
-
+/*DMA初始化*/
 void MyDMA_Init(uint32_t AddrA, uint32_t AddrB)
 {
 	
@@ -53,6 +54,7 @@ void MyDMA_Init(uint32_t AddrA, uint32_t AddrB)
 	DMA_Cmd(DMA1_Channel1, DISABLE);
 }
 
+/*DMA传输*/
 void MyDMA_Transfer(void)
 {
 	DMA_Cmd(DMA1_Channel1, DISABLE);
@@ -62,6 +64,7 @@ void MyDMA_Transfer(void)
 	DMA_ClearFlag(DMA1_FLAG_TC1);
 }
 
+/*嗡鸣器初始化*/
 void Buzz_Init()
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
@@ -74,6 +77,7 @@ void Buzz_Init()
 	GPIO_SetBits(GPIOA, GPIO_Pin_0);
 }
 
+/*嗡鸣器模式*/
 void Buzz_Mode(uint8_t Sound)
 {
 	if(Sound == 1)    //滴滴两声，表示模式切换
@@ -120,13 +124,3 @@ void Buzz_Mode(uint8_t Sound)
 
 
 
-/*
-void TIM2_IRQHandler(void)
-{
-	if (TIM_GetITStatus(TIM2, TIM_IT_Update) == SET)
-	{
-		
-		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
-	}
-}
-*/

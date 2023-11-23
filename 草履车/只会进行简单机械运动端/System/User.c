@@ -14,12 +14,17 @@
 #define  Observe_Send     3			//观察模式，收集的数据重复发送次数（不建议设为1，怕丢包）
 
 
-uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode_1_Data,Mode,BackTrack_Flag,Record_Flag;
-uint16_t WarnBit,BackTrack_Num,Store_Count,BackTrack_Count,HC_SR04_count,aaaaa,Temp;
+//uint8_t mode,Speed,Time,Time_Flag,Data[4],Mode,BackTrack_Flag,Record_Flag;
+//uint16_t WarnBit,BackTrack_Num,Store_Count,BackTrack_Count,HC_SR04_count,aaaaa,Temp;
+//uint8_t RxData[1020+16];
+
+
+uint8_t Data[4],BackTrack_Flag,Record_Flag;
+uint16_t WarnBit,BackTrack_Num,Store_Count,BackTrack_Count,HC_SR04_count,Temp;
 uint8_t RxData[1020+16];
 
-
-void Comm_Check()     //通信检查
+/*通信检查*/
+void Comm_Check(void)     
 {
 	if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_10) == 0)  //获取蓝牙中断
 	{
@@ -35,29 +40,31 @@ void Comm_Check()     //通信检查
 
 
 
-
-void Mode_Init()             //上电模式，用于初始化
+/*上电初始化*/
+void Mode_Init(void)             
 {
 	Motor_Init();
 	NRF24L01_Init();
 	NRF24L01_Rx_Mode();
 	Buzz_Init();
 	Store_Init();
-	Mode = 0;
 	WarnBit = Comm_WarnBit;
-//	W25Q64_Init();
-//	W25Q64_SectorErase(0x000000);
 	//嗡鸣器响起1s;
 }
 
-void Mode_0()            //实时遥控模式
+
+
+/*实时遥控*/
+void Mode_0(void)            
 {
 	NRF24L01_RxPacket(Data);
 	Motor_State(Data[0]);
-    //嗡鸣器
 }
 
-void  Mode_1()            //观察模式
+
+
+/*观察模式，停车对各方向进行超声波测距，并向主机发送*/
+void  Mode_1(void)            
 {
 	Servo_Init();
 	HC_SR04_Init();
@@ -96,7 +103,7 @@ void  Mode_1()            //观察模式
 				NRF24L01_RxPacket(Data);
 			}
 			
-			if(Data[0] != 0x00)   //自定义的一个特殊数据
+			if(Data[0] != 0x00)       
 			{
 				goto Mode_2_Break;
 				
@@ -112,7 +119,9 @@ void  Mode_1()            //观察模式
 }
 
 
-void Mode_2()  			//跟随模式，这个模式太蠢了，只能直线跟随，随便哪条狗都能拐跑草履车，什么图像识别？不知道。。。
+
+/*跟随模式，直线跟随并保持一定距离。（凑模式的）*/
+void Mode_2(void)  			
 {
 	uint8_t Length,Temp,Gap;
 	Gap = 20;                   //误差位，不然车太鬼畜了。
@@ -136,8 +145,11 @@ void Mode_2()  			//跟随模式，这个模式太蠢了，只能直线跟随，
 	}
 	
 }
-	
-void Mode_3()
+
+
+
+/*避障模式，它还需要好好调教（凑模式的）*/
+void Mode_3(void)
 {
 	HC_SR04_Init();
 	uint8_t   Num,Speed;
@@ -174,17 +186,23 @@ void Mode_3()
 	}
 }
 
-void Mode_4()
+
+
+/*睡眠模式，似乎没啥用（凑模式的）*/
+void Mode_4(void)
 {
 	__WFI();      //懒得关时钟了，请让我摸鱼一下
 }
 
 
 
-void Mode_5()   //启动记录
+
+/*读取已记录的操作，并原封不动的执行*/
+void Mode_5(void)   
 {
 	BackTrack_Count = (Store_Data[1] >> 8);
 	Store_Count = 1;
+	Temp = 0;
 	Timer_Init();
 	while(1)
 	{
@@ -200,9 +218,13 @@ void Mode_5()   //启动记录
 	Buzz_Mode(3);         //执行完毕,提醒用户切换模式，嗡鸣结束后操作将再进行一次。	
 }
 
-void Mode_6()          //回溯模式，开始回溯
+
+
+/*读取已记录的操作，并倒着执行（像是回溯或者倒带）*/
+void Mode_6(void)          
 {
 	Timer_Init();
+	Temp = 0;
 	BackTrack_Count = (Store_Data[1]/2)+1;	//实验才是检测代码的唯一标准，执行对了就行。
 	while(1)
 	{
@@ -219,7 +241,9 @@ void Mode_6()          //回溯模式，开始回溯
 	
 }	
 
-void Mode_7()            //记录操作
+
+/*滴声后将记录操作，记录后将存储至闪存*/
+void Mode_7(void)            
 {
 	uint16_t Mode_7_Count = 0;
 	while(1)
@@ -251,10 +275,7 @@ void Mode_7()            //记录操作
 
 
 
-//void Mode_5()       //睡眠模式
-//{
-//	
-//}
+
 
 
 
@@ -279,7 +300,7 @@ void TIM2_IRQHandler(void)               //没资源啊没资源，只能共用�
 				State = ~((uint8_t)Store_Data[BackTrack_Count] & 0xe0);
 				State &= 0xe0;
 				State += ((uint8_t)Store_Data[BackTrack_Count] & 0x03);   
-				Motor_State((uint8_t)aaaaa);
+				Motor_State((uint8_t)State);
 				BackTrack_Count --;
 			}
 			if(BackTrack_Count == 1)
@@ -314,32 +335,3 @@ void TIM2_IRQHandler(void)               //没资源啊没资源，只能共用�
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
 	}
 }
-
-
-		
-/*
-uint8_t Mode_2()            //观察模式
-{
-	
-}
-
-uint8_t Mode_3()            //回溯模式
-{
-	
-}
-
-uint8_t Mode_4()            //自动避障模式
-{
-	
-}
-
-uint8_t Mode_5()            //跟随模式
-{
-	
-}
-
-uint8_t Mode_6()            //休眠模式
-{
-	
-}
-*/

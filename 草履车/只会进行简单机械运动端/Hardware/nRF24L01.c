@@ -9,7 +9,7 @@ const uint8_t RX_ADDRESS[32]={0x34,0x43,0x10,0x10,0x01}; //发送地址
 uint8_t NRF24L01_Write_Buf(uint8_t Address,uint8_t *DataArray,uint8_t Count);
 uint8_t NRF24L01_Read_Buf(uint8_t Address,uint8_t *DataArray,uint8_t Count);
 
-//SPI2配置
+/*SPI2配置*/
 void NRF24L01_W_SS(uint8_t BitValue)
 {
 	GPIO_WriteBit(GPIOB, GPIO_Pin_12, (BitAction)BitValue);
@@ -51,7 +51,7 @@ uint8_t NRF24L01_SwapByte(uint8_t ByteSend)
 	return SPI_I2S_ReceiveData(SPI2);
 }
 
-//NRF24L01初始化
+/*NRF24L01初始化*/
 void NRF24L01_Init(void)
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
@@ -104,7 +104,7 @@ void NRF24L01_Init(void)
 	NRF24L01_W_CSN(1); //SPI 片选取消
 }
 
-//检查本机是否连接上设备
+/*检查本机是否连接上设备*/
 uint8_t NRF24L01_Check(void)
 {
 	uint8_t temp = 1,i,buf[5] = {0x66,0x66,0x66,0x66,0x66};
@@ -120,7 +120,8 @@ uint8_t NRF24L01_Check(void)
 	}
 	return temp;
 }
-//指定地址写寄存器
+
+/*指定地址写寄存器*/
 uint8_t NRF24L01_Write_Reg(uint8_t Address,uint8_t DataAddress)
 {
 	uint8_t num;
@@ -130,7 +131,8 @@ uint8_t NRF24L01_Write_Reg(uint8_t Address,uint8_t DataAddress)
 	NRF24L01_W_CSN(1);
 	return num;
 }
-//指定地址读寄存器
+
+/*指定地址读寄存器*/
 uint8_t NRF24L01_Read_Reg(uint8_t Address)
 {
 	uint8_t DataAddress;
@@ -140,7 +142,8 @@ uint8_t NRF24L01_Read_Reg(uint8_t Address)
 	NRF24L01_W_CSN(1);
 	return DataAddress;
 }
-//指定地址写数据
+
+/*指定地址写数据*/
 uint8_t NRF24L01_Write_Buf(uint8_t Address,uint8_t *DataArray,uint8_t Count)
 {
 	uint8_t Data,i;
@@ -153,7 +156,8 @@ uint8_t NRF24L01_Write_Buf(uint8_t Address,uint8_t *DataArray,uint8_t Count)
 	NRF24L01_W_CSN(1);
 	return Data;
 }
-//指定地址读数据
+
+/*指定地址读数据*/
 uint8_t NRF24L01_Read_Buf(uint8_t Address,uint8_t *DataArray,uint8_t Count)
 {
 	uint8_t Data,i;
@@ -167,6 +171,7 @@ uint8_t NRF24L01_Read_Buf(uint8_t Address,uint8_t *DataArray,uint8_t Count)
 	return Data;
 }
 
+/*发送数据包*/
 uint8_t NRF24L01_TxPacket(uint8_t *TxData)
 {
 	uint8_t Data;
@@ -189,7 +194,8 @@ uint8_t NRF24L01_TxPacket(uint8_t *TxData)
 	return 0xff;
 }
 
-uint8_t NRF24L01_RxPacket(uint8_t *RxData)   /////////////////////////////////////
+/*接收数据包*/
+uint8_t NRF24L01_RxPacket(uint8_t *RxData)  
 {
 	uint8_t Data,Length;
 	Length = sizeof(RxData) / sizeof(RxData [0]);
@@ -204,6 +210,7 @@ uint8_t NRF24L01_RxPacket(uint8_t *RxData)   ///////////////////////////////////
 	return 0;
 }
 
+/*配置NRF24L01接收模式*/
 void NRF24L01_Rx_Mode(void)
 {
 	NRF24L01_W_CE(0); 
@@ -218,7 +225,7 @@ void NRF24L01_Rx_Mode(void)
 	NRF24L01_W_CE(1); 
 }
 
-
+/*配置NRF24L01发送模式*/
 void NRF24L01_Tx_Mode(void)
 {														 
 	NRF24L01_W_CE(0); 
